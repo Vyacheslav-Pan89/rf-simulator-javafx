@@ -12,9 +12,9 @@ This repository is a personal learning project. The owner intends to write the a
 ## Changes to the repository
 
 - Do not implement application code, tests, build configuration, workflows, or milestone tasks unless the owner explicitly requests that specific change.
-- When the owner asks a question or requests text only, answer without editing files.
+- When the owner asks a question or requests text only, answer without editing files and adding any code.
 - Do not add dependencies, frameworks, FXML, Java modules, concurrency, or advanced rendering without explicit approval.
-- Do not mark TODO items complete unless the owner confirms the work is complete.
+- Always mark TODO items complete when the work is complete.
 - Preserve the architecture boundaries, explicit-unit conventions, RF documentation rules, and educational disclaimer in `PROJECT_PLAN.md`.
 
 ## Accuracy and validation
