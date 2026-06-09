@@ -1,6 +1,6 @@
 # RF Simulator JavaFX Project Plan
 
-This document is the working plan for the repository owner. It describes what to learn, decide, implement, document, and validate without beginning the implementation. Work through it incrementally, and keep every implementation item unchecked until the owner personally completes and verifies it.
+This is a practical roadmap for the repository owner. Keep it lightweight: work on one milestone at a time, learn by implementing it personally, and leave tasks unchecked until they are complete.
 
 ## 1. Project purpose and non-goals
 
@@ -91,19 +91,16 @@ Avoid creating empty packages merely to match the plan. Add a package when the c
 
 ## 5. Development workflow and milestone rules
 
-1. Work on one milestone at a time. Do not pull later-milestone ideas into the current implementation.
-2. Before starting a milestone, restate its purpose, included work, excluded work, and completion criteria.
-3. Learn the smallest relevant concept, implement a small slice, test it, and then continue.
-4. Write tests alongside domain and simulation behavior rather than postponing them.
-5. Use Maven Wrapper commands instead of relying on a global Maven installation.
-6. Run `./mvnw test` frequently during development and `./mvnw verify` before finishing a milestone.
-7. Run `./mvnw javafx:run` when manually validating the application. Treat launch failures caused solely by a headless environment as environment limitations, while still investigating ordinary application failures.
-8. Keep commits small, focused, and explainable. A commit should teach or deliver one coherent idea.
-9. Record important architecture and RF-model decisions using the decision log template in this document.
-10. Update this plan only when scope or decisions genuinely change; do not mark aspirational work complete.
-11. Review the purpose, maintenance cost, license, and alternatives before adding a dependency.
-12. Preserve unit clarity and numerical determinism across refactoring.
-13. Profile before optimizing. Avoid premature concurrency, advanced rendering, generalized frameworks, and speculative abstraction.
+1. Work on one milestone at a time; keep later ideas out of the current implementation.
+2. Implement and test small, understandable slices.
+3. Write tests alongside domain and simulation behavior.
+4. Use the Maven Wrapper: run `./mvnw test` during development and `./mvnw verify` before completing a milestone.
+5. Run `./mvnw javafx:run` for manual UI checks. A failure caused only by a headless environment is an environment limitation, not an application failure.
+6. Keep commits small and focused.
+7. Review every dependency before adding it.
+8. Preserve explicit units and deterministic results.
+9. Profile before optimizing; avoid premature concurrency, advanced rendering, and abstraction.
+10. Update this plan only when project scope genuinely changes.
 
 ## 6. Testing strategy
 
@@ -436,33 +433,13 @@ Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and
 - [ ] Keep long-running work off the JavaFX Application Thread.
 - [ ] Test behavior below the UI wherever practical.
 - [ ] Review every new dependency before adding it.
-- [ ] Record important decisions and meaningful reversals.
 - [ ] Keep commits focused and complete only one milestone at a time.
 - [ ] Profile before optimizing and avoid premature abstraction, concurrency, and advanced rendering.
 - [ ] Revisit FXML, Java modules, extra Maven modules, and frameworks only when a documented problem justifies them.
 
-## 10. Decision log template
+## 10. Milestone completion checklist
 
-Copy this template within this section when an architectural or RF-model decision genuinely needs recording:
-
-```text
-Decision ID and title:
-Date:
-Milestone:
-Status: proposed | accepted | superseded
-
-Context and learning question:
-Options considered:
-Decision and reasoning:
-Consequences and trade-offs:
-Units, numerical, or RF-model implications:
-Validation or evidence:
-Conditions that would justify revisiting the decision:
-```
-
-## 11. Milestone completion checklist template
-
-Use this template before declaring any milestone complete. All relevant items should be satisfied by the owner; non-applicable items should be explained rather than silently ignored.
+Before declaring a milestone complete, check the relevant items:
 
 - [ ] The milestone purpose and included scope are delivered.
 - [ ] Excluded and later-milestone work has not leaked into the implementation.
@@ -474,12 +451,11 @@ Use this template before declaring any milestone complete. All relevant items sh
 - [ ] Core architecture dependency rules still hold.
 - [ ] No expensive work runs on the JavaFX Application Thread.
 - [ ] Dependencies added during the milestone have been reviewed.
-- [ ] Important decisions have been recorded.
-- [ ] Documentation and this plan reflect genuine scope or decision changes.
+- [ ] Documentation reflects the implemented behavior.
 - [ ] Commits are small, focused, and understandable.
 
-## 12. Suggested first step for the owner
+## 11. Suggested first step for the owner
 
 Complete **Milestone 0 personally**. Begin by researching how Java 21, JavaFX Controls, Maven, the Maven Wrapper, JUnit Jupiter, the JavaFX Maven Plugin, compiler and test plugins, and Maven Enforcer fit together. Understand why each component is needed before configuring it, and select compatible current versions from their primary documentation.
 
-Then plan the smallest possible foundation: one Maven module, the `com.rfsimulator` base package, a minimal programmatically constructed JavaFX window, one non-UI learning test, and Maven Wrapper commands. Keep RF concepts, grids, persistence, styling, and 3D work out of this milestone. Validate each small addition yourself with the Milestone 0 checks, record any decisions you make, and do not begin Milestone 1 until the foundation completion criteria are satisfied.
+Then plan the smallest possible foundation: one Maven module, the `com.rfsimulator` base package, a minimal programmatically constructed JavaFX window, one non-UI learning test, and Maven Wrapper commands. Keep RF concepts, grids, persistence, styling, and 3D work out of this milestone. Validate each small addition yourself with the Milestone 0 checks, and do not begin Milestone 1 until the foundation completion criteria are satisfied.
