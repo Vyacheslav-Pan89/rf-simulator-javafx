@@ -21,7 +21,7 @@ The project should make both the software design and the RF reasoning understand
 
 ## 2. Planned technology stack
 
-The owner should plan around the following choices while keeping setup work in Milestone 0:
+The owner should plan around the following choices while introducing them only when an early milestone needs them:
 
 - Java 21.
 - JavaFX for the desktop presentation layer, initially using programmatic UI construction.
@@ -131,331 +131,327 @@ Before completing any RF model, document all of the following near its design or
 
 Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and `fieldStrengthDbm` where practical. Never mix linear and logarithmic quantities silently: conversions between watts, milliwatts, dBW, dBm, ratios, and decibels must be explicit, named, documented, and tested. Keep the educational disclaimer visible wherever model results could be misunderstood.
 
-## 8. Milestone roadmap with unchecked TODOs
+## 8. Milestone roadmap
 
-### Milestone 0 — Project foundation
+Each milestone should produce one small, understandable result. Complete its TODOs and checks before moving on. If a milestone still feels too large while working on it, split it again rather than expanding its scope.
 
-**Purpose:** Learn and establish a reproducible Java 21 desktop-project workflow before adding RF concepts.
+### Milestone 0 — Maven and test foundation
 
-**Included work:**
+**Goal:** Establish a reproducible Java 21 build before adding JavaFX or RF concepts.
 
-- [ ] Research and select compatible Java 21, JavaFX, Maven plugin, and JUnit 5 versions.
+- [ ] Research compatible Java 21, Maven plugin, and JUnit 5 versions.
 - [ ] Configure one Maven module and the `com.rfsimulator` base package.
 - [ ] Add and verify the Maven Wrapper.
-- [ ] Configure JavaFX Controls and a minimal launchable window without final styling.
-- [ ] Configure JUnit 5 and write one meaningful non-UI test.
-- [ ] Document local build, test, and run commands.
+- [ ] Add one small non-UI JUnit 5 test.
+- [ ] Document local build and test commands.
 
-**Excluded work:** RF behavior, grids, final UI design, persistence, and 3D rendering.
+**Not yet:** JavaFX, RF behavior, grids, persistence, or rendering.
 
-**Completion criteria:**
+**Done when:** A fresh checkout can run `./mvnw test` and `./mvnw verify` with Java 21.
 
-- [ ] A fresh checkout can use the Maven Wrapper with Java 21 to build and test.
-- [ ] The minimal JavaFX window launches in a graphical environment.
-- [ ] At least one non-UI test passes locally through the Maven Wrapper.
-- [ ] No RF, grid, persistence, or advanced visualization behavior has been introduced.
+### Milestone 1 — Minimal JavaFX application
 
-**Suggested validation checks:**
+**Goal:** Learn the JavaFX application lifecycle with the smallest possible window.
 
-- [ ] Run `./mvnw test`.
-- [ ] Run `./mvnw verify`.
-- [ ] Run `./mvnw javafx:run` in a graphical environment.
-- [ ] Review the dependency tree and confirm every dependency has a current purpose.
-- [ ] Confirm the documented local workflow uses Java 21 and the Maven Wrapper.
+- [ ] Add JavaFX Controls and the JavaFX Maven Plugin.
+- [ ] Create a minimal programmatically constructed window.
+- [ ] Keep application startup separate from future simulation logic.
+- [ ] Document the local run command.
 
-### Milestone 1 — Domain foundation and mathematical values
+**Not yet:** Final UI design, Canvas rendering, simulation, or background tasks.
 
-**Purpose:** Build a clear, immutable vocabulary for later RF and geometry work.
+**Done when:** `./mvnw javafx:run` opens the minimal window in a graphical environment and `./mvnw verify` still passes.
 
-**Included work:**
+### Milestone 2 — Units and scalar RF values
 
-- [ ] Define unit conventions and naming rules before introducing calculations.
-- [ ] Design immutable vectors, positions, distances, frequency, and power values.
-- [ ] Decide where Java records improve clarity and where validated classes are more suitable.
-- [ ] Define and test equality, conversion, validation, and boundary behavior.
-- [ ] Keep every type independent of JavaFX.
+**Goal:** Establish explicit unit conventions for later calculations.
 
-**Excluded work:** grids, propagation formulas, rendering, scenarios, and UI controls.
+- [ ] Define conventions for distance, frequency, and power.
+- [ ] Design immutable scalar values with clear validation rules.
+- [ ] Make linear and logarithmic power conversions explicit.
+- [ ] Test equality, conversions, zero, negative, and non-finite inputs where relevant.
 
-**Completion criteria:**
+**Not yet:** Vectors, grids, sources, or propagation formulas.
 
-- [ ] Each value type has documented units, invariants, and invalid-input behavior.
-- [ ] Boundary, equality, and conversion tests pass deterministically.
-- [ ] Domain source and tests have no JavaFX dependency.
+**Done when:** Unit rules are documented, values are JavaFX-free, and boundary tests pass.
 
-**Suggested validation checks:**
+### Milestone 3 — Positions and vectors
 
-- [ ] Run `./mvnw test` and `./mvnw verify`.
-- [ ] Review public names for explicit units.
-- [ ] Check zero, negative, non-finite, and equality edge cases as applicable.
+**Goal:** Add the minimum immutable geometry vocabulary needed by a 2D simulator.
 
-### Milestone 2 — Grid system
+- [ ] Design immutable 2D positions and vectors.
+- [ ] Define coordinate and distance conventions.
+- [ ] Add only operations required by the next milestone.
+- [ ] Test equality, direction, distance, and boundary behavior.
 
-**Purpose:** Represent deterministic sampling locations without introducing RF calculations or rendering.
+**Not yet:** Grids, rendering, 3D coordinates, or simulation.
 
-**Included work:**
+**Done when:** Geometry behavior is deterministic, documented, tested, and independent of JavaFX.
 
-- [ ] Define grid bounds, resolution, points or cells, and ordering conventions.
-- [ ] Validate bounds and resolution before generation.
-- [ ] Generate grid samples deterministically.
-- [ ] Test counts, coordinates, ordering, boundaries, and invalid input.
+### Milestone 4 — Grid definition
 
-**Excluded work:** rendering, heatmaps, propagation calculations, and advanced RF behavior.
+**Goal:** Describe valid rectangular sampling grids without generating samples yet.
 
-**Completion criteria:**
+- [ ] Define bounds and resolution conventions.
+- [ ] Decide whether bounds represent points, cells, or both.
+- [ ] Validate reversed, empty, and invalid bounds and resolutions.
+- [ ] Test valid and invalid definitions.
 
-- [ ] The same valid grid definition always produces the same samples and ordering.
-- [ ] Invalid bounds and resolutions fail clearly.
-- [ ] Grid behavior is fully testable without JavaFX.
+**Not yet:** Point generation, rendering, or RF calculations.
 
-**Suggested validation checks:**
+**Done when:** Grid definitions have unambiguous invariants and passing boundary tests.
 
-- [ ] Test minimum valid grids, non-square grids, reversed bounds, and extreme resolutions.
-- [ ] Verify documented inclusion or exclusion of maximum boundaries.
-- [ ] Run `./mvnw verify`.
+### Milestone 5 — Deterministic grid generation
 
-### Milestone 3 — Basic simulation engine
+**Goal:** Generate sampling positions in a documented, repeatable order.
 
-**Purpose:** Connect domain values and grid samples through one understandable educational propagation model.
+- [ ] Generate positions from a valid grid definition.
+- [ ] Document ordering and boundary inclusion rules.
+- [ ] Test sample counts, coordinates, ordering, and non-square grids.
+- [ ] Check behavior at minimum and large practical resolutions.
 
-**Included work:**
+**Not yet:** Rendering or propagation calculations.
 
-- [ ] Define a minimal source model with explicit units.
-- [ ] Select and document one educational propagation model using the RF documentation rules.
-- [ ] Sample the model over grid points.
-- [ ] Produce immutable simulation-result snapshots.
-- [ ] Add deterministic reference and boundary tests.
-- [ ] State prominently that simplified output is not a professional-grade RF prediction.
+**Done when:** Identical definitions always produce identical ordered samples.
 
-**Excluded work:** multiple models, obstacles, terrain, antenna patterns, final visualization, and professional prediction claims.
+### Milestone 6 — Source model and propagation contract
 
-**Completion criteria:**
+**Goal:** Define the inputs and output shape for one educational propagation calculation.
 
-- [ ] The model equation, assumptions, units, valid range, and limitations are documented.
-- [ ] Reference cases and singularity behavior are tested.
-- [ ] Identical inputs produce identical immutable results.
-- [ ] Simulation tests run without JavaFX.
+- [ ] Design one minimal immutable source type.
+- [ ] Define a small propagation-model contract with explicit units.
+- [ ] Decide and document behavior at or near a source.
+- [ ] Keep all contracts independent of JavaFX.
 
-**Suggested validation checks:**
+**Not yet:** A propagation equation, grid sampling, or multiple source types.
 
-- [ ] Compare test results with independently calculated reference cases.
-- [ ] Test points at, near, and far from a source according to documented limits.
-- [ ] Run `./mvnw verify` and review numerical tolerances.
+**Done when:** The source and model contract clearly express units, boundaries, and responsibilities.
 
-### Milestone 4 — Toolkit-independent visualization model
+### Milestone 7 — First educational propagation model
 
-**Purpose:** Convert simulation output into presentation-ready values without coupling calculations to JavaFX.
+**Goal:** Implement and understand one simple, clearly limited propagation equation.
 
-**Included work:**
+- [ ] Select one educational model and document it using the RF model documentation rules.
+- [ ] Implement the model without grid or UI dependencies.
+- [ ] Add independently calculated reference cases.
+- [ ] Test valid-range boundaries and singularity handling.
+- [ ] State clearly that results are not professional-grade RF predictions.
 
-- [ ] Define value ranges and normalization policies.
-- [ ] Define legend labels and toolkit-independent color-map values.
-- [ ] Convert immutable simulation output into immutable presentation-ready snapshots.
-- [ ] Test empty, constant, minimum, maximum, clipped, and invalid ranges.
+**Not yet:** Grid sampling, multiple models, obstacles, or terrain.
 
-**Excluded work:** JavaFX Canvas drawing, controls, animation, and 3D rendering.
+**Done when:** The equation, assumptions, units, limitations, and deterministic tests agree.
 
-**Completion criteria:**
+### Milestone 8 — Field sampling and immutable results
 
-- [ ] Visualization-model code has no JavaFX dependency.
-- [ ] Normalization and legend behavior are documented and deterministically tested.
-- [ ] Simulation output remains unchanged during conversion.
+**Goal:** Apply the first propagation model to a grid and produce a stable result snapshot.
 
-**Suggested validation checks:**
+- [ ] Sample the model at generated grid positions.
+- [ ] Define an immutable simulation-result snapshot.
+- [ ] Preserve a clear relationship between positions and sampled values.
+- [ ] Test empty inputs, repeatability, ordering, and representative results.
 
-- [ ] Test normalization boundaries and constant-value inputs.
-- [ ] Confirm values are suitable for more than one possible presentation toolkit.
-- [ ] Run `./mvnw verify`.
+**Not yet:** Color mapping, JavaFX rendering, or multiple sources.
 
-### Milestone 5 — JavaFX Canvas presentation
+**Done when:** Identical inputs produce identical immutable result snapshots without JavaFX.
 
-**Purpose:** Present existing immutable results in a simple, understandable 2D desktop view.
+### Milestone 9 — Visualization ranges and normalization
 
-**Included work:**
+**Goal:** Convert simulation values into toolkit-independent presentation values.
 
-- [ ] Draw a 2D heatmap on JavaFX Canvas.
-- [ ] Draw source markers and a readable legend.
-- [ ] Handle resizing without moving calculations into rendering code.
-- [ ] Keep rendering separate from simulation and normalization.
-- [ ] Run expensive work in the background and publish immutable snapshots to the JavaFX Application Thread.
+- [ ] Define display ranges and normalization behavior.
+- [ ] Handle empty, constant, clipped, minimum, and maximum ranges.
+- [ ] Define toolkit-independent legend labels and color-map values.
+- [ ] Test normalization boundaries and confirm simulation results remain unchanged.
 
-**Excluded work:** advanced 3D, polished final design, heavy animation, and new propagation behavior.
+**Not yet:** JavaFX Canvas or UI controls.
 
-**Completion criteria:**
+**Done when:** Presentation-ready snapshots are deterministic, immutable, and JavaFX-free.
 
-- [ ] The Canvas displays a known result, markers, and legend correctly.
-- [ ] Resizing preserves understandable output.
-- [ ] Expensive calculation does not block the JavaFX Application Thread.
-- [ ] Core layers remain free of JavaFX dependencies.
+### Milestone 10 — Static JavaFX Canvas view
 
-**Suggested validation checks:**
+**Goal:** Draw one known immutable result in a simple 2D view.
 
-- [ ] Run `./mvnw javafx:run` and manually inspect resizing and rendering.
-- [ ] Validate background-task success, failure, and cancellation behavior where applicable.
-- [ ] Run `./mvnw verify`; document any genuinely headless-only UI launch limitation.
+- [ ] Render a heatmap on JavaFX Canvas.
+- [ ] Render source markers and a readable legend.
+- [ ] Keep calculations and normalization out of rendering code.
+- [ ] Manually compare the drawing with a known result.
 
-### Milestone 6 — Scene model and application commands
+**Not yet:** Resizing, background execution, editing, or polished styling.
 
-**Purpose:** Introduce explicit scenarios and use cases while defining who owns mutable application state.
+**Done when:** A known result, markers, and legend render correctly without changing core-layer dependencies.
 
-**Included work:**
+### Milestone 11 — Resizing and background execution
 
-- [ ] Model scenarios containing sources and relevant parameters without JavaFX types.
-- [ ] Design command or use-case objects for source placement, parameter updates, and simulation reruns.
+**Goal:** Keep the JavaFX interface responsive while displaying recalculated results.
+
+- [ ] Make Canvas rendering respond predictably to window resizing.
+- [ ] Run expensive calculation work outside the JavaFX Application Thread.
+- [ ] Publish only immutable snapshots to presentation code.
+- [ ] Handle background success, failure, and cancellation where needed.
+
+**Not yet:** Scenario editing or multiple propagation models.
+
+**Done when:** Resizing remains clear and recalculation does not block the JavaFX Application Thread.
+
+### Milestone 12 — Scene model
+
+**Goal:** Represent a complete simulation scenario without UI dependencies.
+
+- [ ] Define a minimal scene containing sources and required parameters.
+- [ ] Decide which scene values are immutable and where mutable state will live.
+- [ ] Test empty scenes and invalid scene definitions.
+- [ ] Keep the scene model independent of JavaFX.
+
+**Not yet:** UI editing commands, persistence, obstacles, or terrain.
+
+**Done when:** A valid scene completely describes the inputs needed for the current simulation.
+
+### Milestone 13 — Application commands and state ownership
+
+**Goal:** Coordinate scene changes and simulation reruns without putting workflow logic in JavaFX controls.
+
 - [ ] Define one clear owner for mutable application state.
-- [ ] Publish immutable snapshots across layer boundaries.
-- [ ] Test application workflows below the UI.
+- [ ] Add small commands or use cases for source placement and parameter updates.
+- [ ] Coordinate simulation reruns through the application layer.
+- [ ] Test workflows below the UI.
 
-**Excluded work:** persistence, multiple advanced propagation models, obstacles, terrain, and navigation systems.
+**Not yet:** Persistence or advanced RF behavior.
 
-**Completion criteria:**
+**Done when:** A user intent can be traced through an application command to a new immutable result snapshot.
 
-- [ ] State ownership and update flow are documented and understandable.
-- [ ] Commands coordinate behavior without presentation logic.
-- [ ] Application workflows have focused tests where needed.
+### Milestone 14 — Multiple sources and combination rules
 
-**Suggested validation checks:**
+**Goal:** Combine several sources using explicit, mathematically correct rules.
 
-- [ ] Trace a user action from UI intent to command to immutable result.
-- [ ] Test empty scenarios, invalid updates, reruns, and repeated commands.
-- [ ] Run `./mvnw verify`.
+- [ ] Support multiple sources of the existing type.
+- [ ] Document whether and where quantities combine linearly or logarithmically.
+- [ ] Implement explicit conversions required by combination rules.
+- [ ] Test source ordering, single-source equivalence, and reference combinations.
 
-### Milestone 7 — Signal sources and propagation models
+**Not yet:** Multiple propagation strategies or source categories.
 
-**Purpose:** Compare multiple educational source and propagation choices through explicit interchangeable strategies.
+**Done when:** Combination behavior is documented, deterministic, and tested without silent unit mixing.
 
-**Included work:**
+### Milestone 15 — Interchangeable propagation strategies
 
-- [ ] Introduce multiple source types only after defining their educational differences.
-- [ ] Design interchangeable propagation strategies with explicit inputs and immutable outputs.
-- [ ] Define and document source-combination rules, especially linear versus logarithmic handling.
-- [ ] Attach metadata describing model assumptions, units, valid ranges, and limitations.
+**Goal:** Compare more than one educational model through a stable contract.
+
+- [ ] Add a second propagation model only after documenting its educational purpose.
+- [ ] Make model selection explicit.
+- [ ] Attach assumptions, units, valid range, and limitations as model metadata.
 - [ ] Add comparison and reference tests.
 
-**Excluded work:** full-wave simulation, undocumented realism, terrain, and radio-navigation systems.
+**Not yet:** Obstacles, terrain, antenna patterns, or navigation systems.
 
-**Completion criteria:**
+**Done when:** Models can be selected without changing sampling workflows and their differences can be explained.
 
-- [ ] Strategies can be selected without changing core sampling workflows.
-- [ ] Combination rules are mathematically documented and tested.
-- [ ] UI can display model metadata and limitations.
+### Milestone 16 — Obstacles and simple attenuation
 
-**Suggested validation checks:**
+**Goal:** Add one limited environmental effect without pretending to perform full-wave simulation.
 
-- [ ] Compare models with controlled inputs and explain qualitative differences.
-- [ ] Verify source ordering does not accidentally change combined results when it should not.
-- [ ] Run `./mvnw verify`.
+- [ ] Define one simple obstacle representation.
+- [ ] Add one documented attenuation rule.
+- [ ] Test the effect disabled, enabled, and at geometric boundaries.
+- [ ] State omitted physical effects and model limitations prominently.
 
-### Milestone 8 — Obstacles, terrain, and antenna patterns
+**Not yet:** Terrain, antenna patterns, or realistic material databases.
 
-**Purpose:** Add limited environmental and directional effects incrementally while preserving honest model boundaries.
+**Done when:** The obstacle effect can be explained, isolated, and tested deterministically.
 
-**Included work:**
+### Milestone 17 — Terrain model
 
-- [ ] Add one simplified attenuation effect at a time.
-- [ ] Model obstacles and terrain with explicit geometry and assumptions.
-- [ ] Model antenna gain patterns with explicit angle and gain units.
-- [ ] Document interaction rules and limitations for every added effect.
-- [ ] Add isolated and combined-effect tests.
+**Goal:** Introduce one simplified terrain effect separately from obstacles.
 
-**Excluded work:** claims of full-wave electromagnetic simulation, universal material accuracy, and safety analysis.
+- [ ] Define the minimum terrain representation needed by the selected effect.
+- [ ] Document geometry, units, assumptions, and limitations.
+- [ ] Add isolated terrain-effect tests.
+- [ ] Define how terrain and obstacle effects interact, if they do.
 
-**Completion criteria:**
+**Not yet:** Full terrain engines or full-wave simulation.
 
-- [ ] Every effect can be explained, enabled, and tested independently.
-- [ ] Limitations and omitted real-world effects are prominent.
-- [ ] Combined behavior remains deterministic and documented.
+**Done when:** Terrain behavior is independently understandable and tested.
 
-**Suggested validation checks:**
+### Milestone 18 — Antenna gain patterns
 
-- [ ] Compare scenes with each effect disabled and enabled.
-- [ ] Test geometric boundaries and antenna-pattern interpolation edges.
-- [ ] Run `./mvnw verify`.
+**Goal:** Add directional source behavior with explicit angle and gain conventions.
 
-### Milestone 9 — Radio-navigation systems
+- [ ] Define angle orientation and gain units.
+- [ ] Add one simple immutable antenna pattern.
+- [ ] Document interpolation and boundary behavior.
+- [ ] Test expected directions and pattern boundaries.
 
-**Purpose:** Apply stable core propagation concepts to educational ILS, VOR, and DME scenarios.
+**Not yet:** Professional antenna modeling or large pattern libraries.
 
-**Included work:**
+**Done when:** Directional behavior is documented, deterministic, and independently tested.
 
-- [ ] Research and document the real-world concepts behind ILS, VOR, and DME.
-- [ ] Define the educational question each simulated scenario should teach.
-- [ ] Document every simplification and difference from operational systems.
-- [ ] Add navigation scenarios incrementally, with reference and qualitative tests.
+### Milestone 19 — Educational radio-navigation scenario
 
-**Excluded work:** operational guidance, certification, flight-safety decisions, and implementation before core propagation concepts are stable.
+**Goal:** Apply stable core concepts to one carefully scoped navigation-system lesson.
 
-**Completion criteria:**
+- [ ] Choose one of ILS, VOR, or DME based on a clear learning objective.
+- [ ] Research and document the real-world concept using reputable references.
+- [ ] Document every simulator simplification and non-operational limitation.
+- [ ] Build one scenario using existing lower-level models.
+- [ ] Add qualitative and reference tests where practical.
 
-- [ ] Each navigation feature explains the real concept and simulator simplifications.
-- [ ] Scenarios reuse stable lower-level models rather than bypassing architecture.
-- [ ] Results are clearly labeled educational and non-operational.
+**Not yet:** The other navigation systems or operational guidance.
 
-**Suggested validation checks:**
+**Done when:** The scenario teaches one concept clearly and cannot be mistaken for an operational tool.
 
-- [ ] Review explanations against reputable technical references.
-- [ ] Test expected qualitative behavior and documented boundaries.
-- [ ] Run `./mvnw verify`.
+### Milestone 20 — Additional radio-navigation scenarios
 
-### Milestone 10 — Scenario persistence and engineering tools
+**Goal:** Add the remaining educational ILS, VOR, or DME scenarios one at a time.
 
-**Purpose:** Make educational scenarios repeatable and add analysis tools after model behavior is stable.
+- [ ] Add only one new navigation scenario per focused change.
+- [ ] Reuse stable lower-level models instead of bypassing architecture.
+- [ ] Document real concepts, simplifications, and limitations for each scenario.
+- [ ] Add suitable qualitative and reference tests.
 
-**Included work:**
+**Not yet:** Certification, operational guidance, or flight-safety decisions.
 
-- [ ] Design versioned scenario serialization.
-- [ ] Validate imports and provide clear errors for unsupported or invalid data.
-- [ ] Add export workflows that preserve units and model metadata.
-- [ ] Add coverage metrics, probes, charts, and engineering-oriented comparison tools incrementally.
-- [ ] Test versioning, round trips, invalid input, and analysis calculations.
+**Done when:** Each added scenario is independently documented, understandable, and tested.
 
-**Excluded work:** silently accepting ambiguous data, unversioned formats, and claims that analysis output is suitable for certification or safety decisions.
+### Milestone 21 — Versioned scenario persistence
 
-**Completion criteria:**
+**Goal:** Save and reload stable educational scenarios without losing their meaning.
 
-- [ ] Supported scenarios round-trip without losing defined meaning.
-- [ ] Invalid and incompatible inputs fail safely and clearly.
-- [ ] Analysis tools state units, model source, assumptions, and limitations.
+- [ ] Design a versioned scenario format.
+- [ ] Preserve units and model metadata explicitly.
+- [ ] Validate imports and report unsupported or invalid data clearly.
+- [ ] Test representative round trips, malformed data, and unsupported versions.
 
-**Suggested validation checks:**
+**Not yet:** Charts, probes, or broad compatibility promises.
 
-- [ ] Test empty, minimum, representative, malformed, and unsupported-version scenarios.
-- [ ] Verify exported data includes enough metadata to interpret results.
-- [ ] Run `./mvnw verify`.
+**Done when:** Supported scenarios round-trip reliably and invalid input fails safely.
 
-## 9. Project-wide unchecked TODO checklist
+### Milestone 22 — Probes and coverage metrics
 
-- [ ] Keep the educational purpose and non-professional disclaimer visible in documentation and relevant output.
-- [ ] Keep domain, simulation, scene, and toolkit-independent visualization code free of JavaFX dependencies.
-- [ ] Make units explicit in names, contracts, documentation, and tests.
-- [ ] Document every RF model using the rules in this plan.
-- [ ] Keep simulation results immutable and deterministic.
-- [ ] Keep long-running work off the JavaFX Application Thread.
-- [ ] Test behavior below the UI wherever practical.
-- [ ] Review every new dependency before adding it.
-- [ ] Keep commits focused and complete only one milestone at a time.
-- [ ] Profile before optimizing and avoid premature abstraction, concurrency, and advanced rendering.
-- [ ] Revisit FXML, Java modules, extra Maven modules, and frameworks only when a documented problem justifies them.
+**Goal:** Add small analysis tools that help explain simulation results.
 
-## 10. Milestone completion checklist
+- [ ] Add one probe or metric at a time.
+- [ ] State units, calculation source, assumptions, and limitations.
+- [ ] Test calculations and boundary behavior below the UI.
+- [ ] Keep analysis output educational and non-certifying.
 
-Before declaring a milestone complete, check the relevant items:
+**Not yet:** Charts or a large engineering-tool suite.
 
-- [ ] The milestone purpose and included scope are delivered.
-- [ ] Excluded and later-milestone work has not leaked into the implementation.
-- [ ] Public concepts, units, assumptions, and limitations are documented.
-- [ ] Relevant unit, boundary, deterministic, and workflow tests pass.
-- [ ] `./mvnw test` passes.
-- [ ] `./mvnw verify` passes.
-- [ ] `./mvnw javafx:run` has been manually checked when the milestone affects the UI, or a headless environment limitation has been recorded.
-- [ ] Core architecture dependency rules still hold.
-- [ ] No expensive work runs on the JavaFX Application Thread.
-- [ ] Dependencies added during the milestone have been reviewed.
-- [ ] Documentation reflects the implemented behavior.
-- [ ] Commits are small, focused, and understandable.
+**Done when:** Each probe or metric is documented, deterministic, and useful for learning.
 
-## 11. Suggested first step for the owner
+### Milestone 23 — Charts and comparison tools
 
-Complete **Milestone 0 personally**. Begin by researching how Java 21, JavaFX Controls, Maven, the Maven Wrapper, JUnit Jupiter, the JavaFX Maven Plugin, compiler and test plugins, and Maven Enforcer fit together. Understand why each component is needed before configuring it, and select compatible current versions from their primary documentation.
+**Goal:** Present stable results and model comparisons in focused educational charts.
 
-Then plan the smallest possible foundation: one Maven module, the `com.rfsimulator` base package, a minimal programmatically constructed JavaFX window, one non-UI learning test, and Maven Wrapper commands. Keep RF concepts, grids, persistence, styling, and 3D work out of this milestone. Validate each small addition yourself with the Milestone 0 checks, and do not begin Milestone 1 until the foundation completion criteria are satisfied.
+- [ ] Add only charts that answer a clear learning question.
+- [ ] Label units, models, assumptions, and ranges.
+- [ ] Keep chart-data preparation testable below JavaFX.
+- [ ] Validate charts against known result snapshots.
+
+**Not yet:** Professional reporting or certification output.
+
+**Done when:** Each chart communicates a documented learning point without obscuring model limitations.
+
+## 9. Suggested first step for the owner
+
+Complete **Milestone 0 personally**. Research how Java 21, Maven, the Maven Wrapper, JUnit Jupiter, the Maven Compiler Plugin, Maven Surefire Plugin, and Maven Enforcer Plugin fit together. Understand why each component is needed before configuring it, and select compatible current versions from their primary documentation.
+
+Keep the first milestone limited to a reproducible build and one non-UI test. JavaFX now begins in Milestone 1. Run the Milestone 0 checks yourself, and do not begin Milestone 1 until its completion statement is true.
