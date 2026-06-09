@@ -139,11 +139,11 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Establish a reproducible Java 21 build before adding JavaFX or RF concepts.
 
-- [ ] Research compatible Java 21, Maven plugin, and JUnit 5 versions.
-- [ ] Configure one Maven module and the `com.rfsimulator` base package.
-- [ ] Add and verify the Maven Wrapper.
-- [ ] Add one small non-UI JUnit 5 test.
-- [ ] Document local build and test commands.
+- [x] Research compatible Java 21, Maven plugin, and JUnit 5 versions.
+- [x] Configure one Maven module and the `com.rfsimulator` base package.
+- [x] Add and verify the Maven Wrapper.
+- [x] Add one small non-UI JUnit 5 test.
+- [x] Document local build and test commands.
 
 **Not yet:** JavaFX, RF behavior, grids, persistence, or rendering.
 

@@ -8,9 +8,7 @@ The project will be developed incrementally using Java 21, JavaFX, Maven, and JU
 
 ## Current Status
 
-The project is currently in the planning stage.
-
-No application code or simulation functionality has been implemented yet. The repository owner intends to write the application personally as a learning exercise.
+The Maven and test foundation is complete. No application or simulation functionality has been implemented yet.
 
 ## Goals
 
@@ -29,6 +27,24 @@ See [`PROJECT_PLAN.md`](PROJECT_PLAN.md) for:
 - the milestone roadmap;
 - completion criteria; and
 - the suggested first implementation step.
+
+## Building and Testing
+
+Java 21 is required.
+
+Run tests:
+
+```bash
+./mvnw test
+```
+
+Verify the complete build:
+
+```bash
+./mvnw verify
+```
+
+On Windows Command Prompt or PowerShell, use `mvnw.cmd` instead of `./mvnw`.
 
 ## License
 
