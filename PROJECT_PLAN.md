@@ -27,7 +27,6 @@ The owner should plan around the following choices while keeping setup work in M
 - JavaFX for the desktop presentation layer, initially using programmatic UI construction.
 - Maven with the Maven Wrapper so builds do not depend on a globally installed Maven version.
 - JUnit 5 for automated tests.
-- GitHub Actions for continuous integration.
 - Base package `com.rfsimulator`.
 - One Maven module initially; split modules only if a documented need appears later.
 - No Spring or dependency-injection framework. Prefer explicit constructors and straightforward object creation.
@@ -148,8 +147,7 @@ Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and
 - [ ] Add and verify the Maven Wrapper.
 - [ ] Configure JavaFX Controls and a minimal launchable window without final styling.
 - [ ] Configure JUnit 5 and write one meaningful non-UI test.
-- [ ] Configure GitHub Actions to run the Maven verification lifecycle.
-- [ ] Document local build, test, run, and CI commands.
+- [ ] Document local build, test, and run commands.
 
 **Excluded work:** RF behavior, grids, final UI design, persistence, and 3D rendering.
 
@@ -157,7 +155,7 @@ Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and
 
 - [ ] A fresh checkout can use the Maven Wrapper with Java 21 to build and test.
 - [ ] The minimal JavaFX window launches in a graphical environment.
-- [ ] At least one non-UI test passes locally and in GitHub Actions.
+- [ ] At least one non-UI test passes locally through the Maven Wrapper.
 - [ ] No RF, grid, persistence, or advanced visualization behavior has been introduced.
 
 **Suggested validation checks:**
@@ -166,7 +164,7 @@ Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and
 - [ ] Run `./mvnw verify`.
 - [ ] Run `./mvnw javafx:run` in a graphical environment.
 - [ ] Review the dependency tree and confirm every dependency has a current purpose.
-- [ ] Confirm CI uses Java 21 and the Maven Wrapper.
+- [ ] Confirm the documented local workflow uses Java 21 and the Maven Wrapper.
 
 ### Milestone 1 — Domain foundation and mathematical values
 
@@ -482,6 +480,6 @@ Use this template before declaring any milestone complete. All relevant items sh
 
 ## 12. Suggested first step for the owner
 
-Complete **Milestone 0 personally**. Begin by researching how Java 21, JavaFX Controls, Maven, the Maven Wrapper, JUnit Jupiter, the JavaFX Maven Plugin, compiler and test plugins, Maven Enforcer, and GitHub Actions fit together. Understand why each component is needed before configuring it, and select compatible current versions from their primary documentation.
+Complete **Milestone 0 personally**. Begin by researching how Java 21, JavaFX Controls, Maven, the Maven Wrapper, JUnit Jupiter, the JavaFX Maven Plugin, compiler and test plugins, and Maven Enforcer fit together. Understand why each component is needed before configuring it, and select compatible current versions from their primary documentation.
 
-Then plan the smallest possible foundation: one Maven module, the `com.rfsimulator` base package, a minimal programmatically constructed JavaFX window, one non-UI learning test, Maven Wrapper commands, and a CI verification job. Keep RF concepts, grids, persistence, styling, and 3D work out of this milestone. Validate each small addition yourself with the Milestone 0 checks, record any decisions you make, and do not begin Milestone 1 until the foundation completion criteria are satisfied.
+Then plan the smallest possible foundation: one Maven module, the `com.rfsimulator` base package, a minimal programmatically constructed JavaFX window, one non-UI learning test, and Maven Wrapper commands. Keep RF concepts, grids, persistence, styling, and 3D work out of this milestone. Validate each small addition yourself with the Milestone 0 checks, record any decisions you make, and do not begin Milestone 1 until the foundation completion criteria are satisfied.
