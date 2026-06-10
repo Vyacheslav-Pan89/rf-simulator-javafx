@@ -2,36 +2,49 @@
 
 RF Simulator is a planned educational JavaFX desktop application for exploring simplified radio-frequency propagation concepts while learning professional Java software development.
 
-The project will be developed incrementally using Java 21, JavaFX, Maven, and JUnit 5.
+The project is developed incrementally with Java 21, JavaFX, a Maven multi-module build, and JUnit 5.
 
-> **Important:** RF Simulator is intended for education only. It is not a professional electromagnetic solver, certification tool, or safety-analysis tool.
+> **Important:** RF Simulator is intended for education only. It is not a professional electromagnetic solver, certification tool, operational navigation tool, or safety-analysis tool.
 
 ## Current Status
 
-The Maven and test foundation is complete. No application or simulation functionality has been implemented yet.
+The reproducible Maven and test foundation is complete. The next focused step is to establish the incremental multi-module reactor before completing the minimal JavaFX application.
+
+No RF simulation behavior has been implemented yet.
 
 ## Goals
 
-- Learn Java architecture, testing, documentation, and incremental development.
+- Learn Java architecture, testing, documentation, and incremental delivery.
 - Build understandable and testable educational RF models.
 - Keep physical units, assumptions, and model limitations explicit.
-- Separate simulation behavior from JavaFX presentation code.
+- Keep simulation behavior independent of JavaFX presentation code.
+- Use Maven modules to enforce stable dependency boundaries as responsibilities are introduced.
 
-## Project Plan
+## Intended Maven Modules
 
-See [`PROJECT_PLAN.md`](PROJECT_PLAN.md) for:
+Modules are introduced only when an active milestone gives them real behavior. Empty future modules are not created in advance.
 
-- the planned architecture;
-- the target design and responsibility boundaries in [`DESIGN_GUIDE.md`](DESIGN_GUIDE.md);
-- development rules;
-- testing and RF-documentation guidance;
-- the milestone roadmap;
-- completion criteria; and
-- the suggested first implementation step.
+| Module | Responsibility | Introduced when |
+| --- | --- | --- |
+| `rf-desktop` | JavaFX lifecycle, controls, events, and drawing | Multi-module foundation |
+| `rf-domain` | Immutable units, values, geometry, and invariants | Units milestone |
+| `rf-scene` | Toolkit-independent scenario descriptions | Grid/scene concepts require it |
+| `rf-simulation` | Deterministic propagation calculations and sampling | Calculation behavior begins |
+| `rf-visualization` | Toolkit-independent normalization and display preparation | Visualization preparation begins |
+| `rf-application` | Commands, use cases, and mutable-state ownership | Application workflows begin |
+| `rf-persistence` | Versioned scenario storage, only if justified | Persistence milestone |
+
+Only `rf-desktop` may depend on JavaFX. Maven modules are used first; Java Platform Module System descriptors (`module-info.java`) remain optional and require a separate documented reason.
+
+## Documentation
+
+- [`PROJECT_PLAN.md`](PROJECT_PLAN.md) defines the development rules, milestone order, completion criteria, and non-goals.
+- [`DESIGN_GUIDE.md`](DESIGN_GUIDE.md) defines module boundaries, dependency direction, responsibility placement, and design review rules.
+- [`AGENT.md`](AGENT.md) defines collaboration rules for AI assistance.
 
 ## Building and Testing
 
-Java 21 is required.
+Java 21 is required. Run commands from the repository root so Maven builds the complete active reactor.
 
 Run tests:
 
@@ -43,6 +56,12 @@ Verify the complete build:
 
 ```bash
 ./mvnw verify
+```
+
+After multiple modules exist, run one module and all dependencies required to build it with:
+
+```bash
+./mvnw -pl <module-name> -am test
 ```
 
 On Windows Command Prompt or PowerShell, use `mvnw.cmd` instead of `./mvnw`.
