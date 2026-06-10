@@ -37,6 +37,51 @@ The owner should plan around the following choices while introducing them only w
 
 Possible future Maven setup items include JavaFX Controls, JavaFX Maven Plugin, Maven Compiler Plugin, Maven Surefire Plugin, Maven Enforcer Plugin, and JUnit Jupiter. The owner should research current compatible versions, understand each tool's purpose, and add only what the current milestone needs.
 
+## Engineering principles
+
+### KISS and YAGNI
+
+Implement the smallest understandable design that satisfies the active
+milestone. Do not add future modules, interfaces, behavior, or optimization
+without a current need.
+
+### Responsible DRY
+
+Remove duplication when it represents the same stable knowledge or business
+rule. Prefer small local duplication over an abstraction with unclear
+ownership or likely future divergence.
+
+### Practical SOLID
+
+Use SOLID principles to improve current responsibility boundaries and
+substitutability. Do not create interfaces, inheritance hierarchies, or
+layers only to satisfy a principle mechanically.
+
+### Test-driven development
+
+Prefer a red-green-refactor cycle for deterministic behavior:
+
+1. Write one readable failing test that describes the next behavior.
+2. Implement the smallest change that makes it pass.
+3. Refactor while keeping all tests passing.
+4. Run the complete active reactor before completing the milestone.
+
+UI exploration does not require strict TDD, but calculations, normalization,
+validation, and workflow decisions must remain below JavaFX and be tested
+there.
+
+### Practical clean code
+
+For this project, clean code means:
+
+- names communicate responsibility and physical units;
+- methods and classes remain focused;
+- validation and boundary behavior are explicit;
+- dependencies follow the documented module graph;
+- comments explain RF assumptions and non-obvious decisions;
+- tests remain readable examples of intended behavior; and
+- refactoring improves clarity without changing protected behavior.
+
 ## 3. Architectural modules and dependency rules
 
 Maven modules enforce the major architecture boundaries. Add them incrementally when a milestone gives them real behavior.
@@ -108,19 +153,6 @@ Packages organize related types inside modules. Add a package only when the acti
 8. Preserve explicit units and deterministic results.
 9. Profile before optimizing; avoid premature concurrency, advanced rendering, and abstraction.
 10. Update this plan only when project scope genuinely changes.
-
-## Engineering principles
-
-- Prefer a red-green-refactor TDD cycle for deterministic domain, scene,
-  simulation, visualization, and application behavior.
-- Keep designs simple and limited to the active milestone.
-- Remove duplication when it represents the same stable knowledge or rule;
-  do not create premature shared abstractions.
-- Apply SOLID principles when they clarify a current responsibility or
-  dependency boundary, not as a reason to add unnecessary interfaces or layers.
-- Refactor after behavior is protected by tests.
-- Treat readable names, explicit units, focused responsibilities, and clear
-  validation as the project's practical definition of clean code.
 
 ## 6. Testing strategy
 
