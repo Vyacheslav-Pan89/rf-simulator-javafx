@@ -1,13 +1,11 @@
 # RF Simulator Design Guide
 
-This guide describes the intended shape of RF Simulator as it grows. It turns the project roadmap into practical design instructions without requiring every future class to be created in advance.
+This guide defines the intended architecture of RF Simulator. Use it with [`PROJECT_PLAN.md`](PROJECT_PLAN.md):
 
-Use this document together with [`PROJECT_PLAN.md`](PROJECT_PLAN.md):
+- `PROJECT_PLAN.md` defines **when** a capability is introduced.
+- This guide defines **where it belongs**, **which module may depend on it**, and **which decisions must be made before implementation**.
 
-- `PROJECT_PLAN.md` defines **when** a capability should be introduced.
-- This guide defines **where it belongs**, **how layers communicate**, and **which design decisions must be made before implementation**.
-
-Names in this guide are recommendations, not requirements. Prefer the smallest design that satisfies the current milestone, and create a class or interface only when it has a real responsibility.
+Names in this guide are recommendations, not requirements. Prefer the smallest design that satisfies the active milestone. Do not create a module, package, class, or interface before it has a real responsibility.
 
 ## 1. Target behavior
 
@@ -17,45 +15,76 @@ Later capabilities may include multiple sources, interchangeable educational pro
 
 The application must always state that its results are educational. It is not a professional electromagnetic solver, certification tool, operational navigation tool, or safety-analysis tool.
 
-## 2. Dependency direction
+## 2. Architectural dependency direction
 
-Dependencies must point toward lower-level policies:
+Dependencies point toward lower-level policies. A lower-level module must never depend on a higher-level module.
 
 ```text
-JavaFX UI
-    -> Application workflows
-        -> Scene descriptions and simulation services
-            -> Domain values and mathematics
+rf-domain
+    ↑
+rf-scene
+    ↑
+rf-simulation
+    ↑
+rf-application ────────┐
+                       ├──> rf-desktop
+rf-visualization ──────┘
 ```
 
-Apply these rules:
+The complete allowed dependency set is:
 
-1. `domain`, `simulation`, and `scene` must never import JavaFX.
+```text
+rf-domain        -> no project modules
+rf-scene         -> rf-domain
+rf-simulation    -> rf-domain, rf-scene
+rf-application   -> rf-domain, rf-scene, rf-simulation
+rf-visualization -> rf-domain, rf-simulation
+rf-desktop       -> rf-application, rf-visualization, JavaFX
+rf-persistence   -> stable lower-level contracts chosen when persistence begins
+```
+
+This graph is intentionally acyclic. If two modules appear to require each other, responsibilities must be reconsidered instead of creating a cycle.
+
+## 3. Incremental Maven module strategy
+
+RF Simulator uses Maven modules to enforce major architectural boundaries. Modules are introduced incrementally when the active milestone gives them real behavior.
+
+| Module | Primary package | Responsibility |
+| --- | --- | --- |
+| `rf-domain` | `com.rfsimulator.domain` | Immutable physical quantities, geometry, values, and core invariants |
+| `rf-scene` | `com.rfsimulator.scene` | JavaFX-free descriptions of sources, grids, obstacles, terrain, and complete scenarios |
+| `rf-simulation` | `com.rfsimulator.simulation` | Propagation contracts, deterministic calculations, sampling, and immutable results |
+| `rf-application` | `com.rfsimulator.application` | Commands, use cases, workflow coordination, and mutable-state ownership |
+| `rf-visualization` | `com.rfsimulator.visualization` | Toolkit-independent display ranges, normalization, legends, probes, and chart-ready data |
+| `rf-desktop` | `com.rfsimulator.ui` and launcher package | JavaFX lifecycle, controls, events, Canvas drawing, and JavaFX adapters |
+| `rf-persistence` | Chosen when needed | Versioned and validated scenario storage, only if a separate module is justified |
+
+Apply these Maven rules:
+
+1. The repository root POM is the parent and reactor aggregator.
+2. Add a child module only when it receives its first real responsibility.
+3. Do not create empty future modules to mirror the final architecture.
+4. Child modules explicitly declare every project-module dependency they use.
+5. The parent uses `dependencyManagement` and `pluginManagement` to centralize versions and defaults; it must not inject broad dependencies into every child.
+6. Only `rf-desktop` declares JavaFX dependencies.
+7. Do not create generic `common`, `shared`, or `utils` modules. Place a type according to its meaning.
+8. Maven modules and Java Platform Module System descriptors are separate decisions. Do not add `module-info.java` without a documented need.
+9. Run `./mvnw test` and `./mvnw verify` from the repository root to validate the complete active reactor.
+
+## 4. Layer and package rules
+
+1. `domain`, `scene`, `simulation`, `application`, and `visualization` must never import JavaFX.
 2. UI event handlers translate user actions into application commands or use cases; they do not perform RF calculations.
 3. Simulation code accepts immutable inputs and returns immutable result snapshots.
 4. Presentation normalization is calculated outside JavaFX rendering code.
-5. Mutable state has one clear owner in the application layer.
-6. Expensive work may run in the background only after profiling shows a need; concurrency must remain outside simulation mathematics.
+5. Mutable application state has one clear owner.
+6. Expensive work may run in the background only after profiling shows a need; concurrency stays outside simulation mathematics.
+7. Packages organize related classes inside modules. Modules enforce significant dependency boundaries.
+8. If a class appears to belong to several packages or modules, it probably owns too many responsibilities and should be split.
 
-## 3. Intended package responsibilities
+## 5. Core design decisions
 
-```text
-com.rfsimulator
-├── domain          immutable units, values, geometry, and invariants
-├── simulation      propagation contracts, calculations, sampling, and results
-├── scene           toolkit-independent scenario descriptions
-├── application     commands, use cases, and mutable-state ownership
-├── visualization   toolkit-independent display ranges and normalized values
-└── ui              JavaFX lifecycle, controls, Canvas drawing, and event adapters
-```
-
-Add packages only when the active milestone gives them behavior to own. Do not create an empty final-project package tree.
-
-A separate persistence package may be introduced when versioned scenario persistence begins.
-
-## 4. Core design decisions
-
-### 4.1 Physical quantities are not generic numbers
+### 5.1 Physical quantities are not generic numbers
 
 Represent quantities with explicit immutable types when doing so prevents unit confusion. Likely concepts include `Distance`, `Frequency`, `PowerWatts`, `PowerDbm`, `GainDb`, and `Angle`.
 
@@ -65,30 +94,30 @@ Requirements:
 - Validate non-finite values and invalid ranges at construction boundaries.
 - Keep linear and logarithmic values in distinct types.
 - Make conversions explicit and named.
-- Do not pass ambiguous parameters such as `double power` when the required unit is not obvious from the type or name.
+- Do not pass ambiguous parameters such as `double power` when the required unit is unclear.
 
-### 4.2 Positions and vectors have different meanings
+### 5.2 Positions and vectors have different meanings
 
 Do not use one type interchangeably for both a location and a displacement.
 
 Recommended concepts:
 
-- `Position2D`: a location in the documented two-dimensional coordinate system.
+- `Position2D`: a location in the documented coordinate system.
 - `Vector2D`: a direction or displacement.
 
-Only add operations required by the current milestone. For example, `Position2D.distanceTo(Position2D)` is useful early, while rotations or projections should wait until a real feature needs them.
+Only add operations required by the active milestone. For example, `Position2D.distanceTo(Position2D)` is useful early, while rotations or projections should wait for a real feature.
 
-### 4.3 Use one source concept until distinct source categories are needed
+### 5.3 Begin with one source concept
 
 Begin with one minimal immutable source, likely named `RadioSource` or `PointSource`. It should express only the data required by the first propagation model, such as position and transmit power.
 
-Do not create overlapping source classes with unclear differences. Introduce another source type only when its behavior or invariants are genuinely different.
+Do not create overlapping source representations with unclear differences. Introduce another source type only when its behavior or invariants are genuinely different.
 
-Source descriptions belong in `scene`; propagation behavior belongs in `simulation`.
+Source descriptions belong in `rf-scene`; propagation behavior belongs in `rf-simulation`.
 
-### 4.4 Separate grid definition, generation, and sampled results
+### 5.4 Separate grid definition, generation, and sampled results
 
-These are different responsibilities:
+These are separate responsibilities:
 
 - A grid definition describes valid bounds and resolution or spacing.
 - A grid generator creates positions in a documented deterministic order.
@@ -103,11 +132,11 @@ Before implementing grid generation, document:
 - behavior for reversed, empty, non-finite, and invalid definitions; and
 - floating-point boundary behavior.
 
-Do not combine source ownership, grid configuration, generation, and sampled results into one large grid class.
+Do not combine source ownership, grid configuration, point generation, and sampled results into one large class.
 
-### 4.5 Propagation models must state what they calculate
+### 5.5 Propagation models must state what they calculate
 
-Use a small propagation contract so sampling workflows do not depend on one equation. A likely interface is `PropagationModel`, but it should be introduced only when its input and output meanings are understood.
+Use a small propagation contract so sampling workflows do not depend on one equation. A likely interface is `PropagationModel`, but introduce it only when its input and output meanings are understood.
 
 Every model must define:
 
@@ -118,11 +147,11 @@ Every model must define:
 - omitted effects and limitations; and
 - independently calculated reference cases.
 
-Avoid vague names such as `FieldCalculator` unless the result truly represents a documented field quantity. Prefer a name that communicates the model or output meaning.
+Avoid vague names such as `FieldCalculator` unless the result truly represents a documented field quantity. Prefer names that communicate the model or output meaning.
 
-### 4.6 Results are immutable snapshots
+### 5.6 Results are immutable snapshots
 
-A result should preserve an unambiguous relationship between sample positions and values. A likely shape is an immutable collection of `FieldSample` values inside a `SimulationResult`.
+A result must preserve an unambiguous relationship between sample positions and values. A likely shape is an immutable collection of `FieldSample` values inside a `SimulationResult`.
 
 Requirements:
 
@@ -131,11 +160,9 @@ Requirements:
 - Result metadata identifies the model and assumptions used.
 - UI code can read a result but cannot alter it.
 
-### 4.7 Application workflows own changes
+### 5.7 Application workflows own changes
 
-The application layer is the single coordination point between UI actions and lower-level behavior.
-
-A typical flow is:
+The application layer coordinates user intentions and owns mutable application state.
 
 ```text
 User action
@@ -147,71 +174,71 @@ User action
                         -> JavaFX rendering
 ```
 
-Return immutable copies or snapshots from state owners. Never expose a mutable internal collection directly.
+Return immutable copies or snapshots from state owners. Never expose mutable internal collections directly.
 
-### 4.8 Visualization preparation is separate from drawing
+### 5.8 Visualization preparation is separate from drawing
 
-`visualization` converts simulation values into toolkit-independent display data. It may own display ranges, clipping rules, normalization, legend labels, probes, metric results, and chart-ready comparison data.
+`rf-visualization` converts simulation values into toolkit-independent display data. It may own display ranges, clipping rules, normalization, legend labels, probes, metric results, and chart-ready comparison data.
 
-`ui` converts that prepared data into JavaFX colors, Canvas operations, controls, and charts. Canvas code must not contain RF formulas or decide simulation-value normalization rules.
+`rf-desktop` converts prepared data into JavaFX colors, Canvas operations, controls, and charts. Canvas code must not contain RF formulas or decide simulation-value normalization rules.
 
-## 5. Candidate types by layer
+## 6. Candidate types by module
 
-The following names communicate the intended responsibilities. Introduce them only when their milestone begins and adjust names when the implemented behavior suggests something clearer.
+Introduce these only when their milestone begins, and adjust names when implemented behavior suggests something clearer.
 
-| Layer | Candidate types | Responsibility |
-| --- | --- | --- |
-| Domain | `Distance`, `Frequency`, `PowerWatts`, `PowerDbm`, `GainDb`, `Angle` | Explicit immutable physical quantities and conversions |
-| Domain | `Position2D`, `Vector2D` | Locations, directions, displacement, and required geometry |
-| Scene | `RadioSource`, `GridDefinition`, `SimulationScene`, `Obstacle`, `TerrainProfile`, `AntennaPattern` | Complete JavaFX-free descriptions of scenario inputs |
-| Simulation | `PropagationModel`, model implementations, `GridGenerator`, `FieldSampler`, `FieldSample`, `SimulationResult` | Deterministic calculations and immutable outputs |
-| Application | `ApplicationState`, focused commands, focused use cases | Workflow coordination and ownership of mutable state |
-| Visualization | `DisplayRange`, `ValueNormalizer`, `Legend`, `ProbeResult`, `ModelComparison` | Deterministic presentation-ready values |
-| UI | `RfSimulatorApplication`, main window/view, Canvas renderer, focused editor panes | JavaFX lifecycle, controls, events, and drawing |
-| Persistence | scenario document, format version, serializer/repository | Versioned and validated save/load behavior |
+| Module | Candidate types |
+| --- | --- |
+| `rf-domain` | `Distance`, `Frequency`, `PowerWatts`, `PowerDbm`, `GainDb`, `Angle`, `Position2D`, `Vector2D` |
+| `rf-scene` | `RadioSource`, `GridDefinition`, `SimulationScene`, `Obstacle`, `TerrainProfile`, `AntennaPattern` |
+| `rf-simulation` | `PropagationModel`, model implementations, `GridGenerator`, `FieldSampler`, `FieldSample`, `SimulationResult` |
+| `rf-application` | `ApplicationState`, focused commands, and focused use cases |
+| `rf-visualization` | `DisplayRange`, `ValueNormalizer`, `Legend`, `ProbeResult`, `ModelComparison` |
+| `rf-desktop` | `RfSimulatorLauncher`, `RfSimulatorApplication`, main window/view, Canvas renderer, and focused editor panes |
+| `rf-persistence` | Scenario document, format version, serializer, and repository, if justified |
 
-Interfaces are justified where behavior is genuinely interchangeable, such as propagation models or antenna patterns. Prefer records and concrete classes for simple values and single implementations.
+Interfaces are appropriate where behavior is genuinely interchangeable, such as propagation models or antenna patterns. Prefer records and concrete classes for simple values and single implementations. Do not create an interface only to cross a module boundary.
 
-## 6. Feature placement rules
-
-When adding a feature, place it by responsibility rather than by the screen where it appears.
+## 7. Feature placement rules
 
 | Question | Destination |
 | --- | --- |
-| Is it an immutable RF value, unit, or geometry invariant? | `domain` |
-| Does it describe something present in a scenario? | `scene` |
-| Does it calculate RF behavior or sample a model? | `simulation` |
-| Does it coordinate a user intent or own mutable state? | `application` |
-| Does it prepare ranges, normalized values, legends, probes, or chart data? | `visualization` |
-| Does it import JavaFX or draw/control something? | `ui` |
+| Is it an immutable RF value, unit, geometry concept, or invariant? | `rf-domain` |
+| Does it describe something present in a scenario? | `rf-scene` |
+| Does it calculate RF behavior or sample a model? | `rf-simulation` |
+| Does it coordinate a user intent or own mutable state? | `rf-application` |
+| Does it prepare ranges, normalized values, legends, probes, or chart data? | `rf-visualization` |
+| Does it import JavaFX or draw/control something? | `rf-desktop` |
+| Does it encode or decode a stable scenario format? | `rf-persistence`, if separately justified |
 
-If a class appears to belong in several packages, it probably owns too many responsibilities and should be split.
+If several modules need a type, place it in the lowest module that truly owns its meaning. Do not move a type downward only to avoid declaring a legitimate dependency.
 
-## 7. Implementation sequence
+## 8. Implementation sequence
 
 For each milestone:
 
 1. Write down the smallest behavior and explicit non-goals.
-2. Define units, invariants, invalid inputs, and boundary behavior before implementation.
-3. Add the smallest type or contract needed by that behavior.
-4. Write readable tests as examples of the intended behavior.
-5. Implement only enough to satisfy the active milestone.
-6. Run `./mvnw test` during development and `./mvnw verify` before completion.
-7. Update documentation and mark TODOs complete only when the milestone completion statement is true.
+2. Identify the module that owns the behavior; create that module only if it does not exist and now has a real responsibility.
+3. Define units, invariants, invalid inputs, and boundary behavior before implementation.
+4. Add the smallest type or contract needed by that behavior.
+5. Write readable tests as examples of intended behavior.
+6. Implement only enough to satisfy the active milestone.
+7. Run `./mvnw test` during development and `./mvnw verify` before completion.
+8. Update documentation and mark TODOs complete only when the milestone completion statement is true.
 
-Do not copy a future target structure into the repository in advance. Let tests and current responsibilities drive each addition.
-
-## 8. Review checklist
+## 9. Review checklist
 
 Before completing a change, verify:
 
 - [ ] The change belongs to the active milestone.
+- [ ] A new module was added only because it now owns real behavior.
+- [ ] Module dependencies follow the documented acyclic graph.
+- [ ] JavaFX dependencies and imports exist only in `rf-desktop`.
 - [ ] New quantities use explicit units and validation.
-- [ ] JavaFX imports exist only in presentation code.
-- [ ] Collections and results crossing layers are immutable snapshots.
+- [ ] Collections and results crossing boundaries are immutable snapshots.
 - [ ] Grid ordering and boundary behavior remain deterministic.
 - [ ] RF equations document meaning, assumptions, limits, and reference cases.
 - [ ] UI handlers delegate instead of calculating.
-- [ ] No interface, framework, concurrency, or abstraction was added without a current need.
+- [ ] No generic shared module, framework, concurrency, or abstraction was added without a current need.
 - [ ] Tests cover normal behavior, invalid inputs, and relevant boundaries.
+- [ ] Root `./mvnw test` and `./mvnw verify` validate the complete active reactor.
 - [ ] Educational and non-operational limitations remain visible.
