@@ -27,7 +27,8 @@ The owner should plan around the following choices while introducing them only w
 - Java 21.
 - JavaFX for the desktop presentation layer, initially using programmatic UI construction.
 - Maven with the Maven Wrapper so builds do not depend on a globally installed Maven version.
-@@ -43,52 +43,54 @@ The conceptual layers are:
+The conceptual layers are:
+```
 Domain Core
     ↓
 Simulation Engine
