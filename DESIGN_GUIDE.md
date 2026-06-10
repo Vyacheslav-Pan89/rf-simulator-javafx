@@ -251,15 +251,3 @@ For this project, clean code means:
 
 These principles guide decisions rather than acting as absolute rules. Clarity, correctness, and the active milestone's scope take priority over satisfying an acronym.
 
-## 9. Implementation sequence
-
-For each milestone:
-
-1. Write down the smallest behavior and explicit non-goals.
-2. Identify the module that owns the behavior; create that module only if it does not exist and now has a real responsibility.
-3. Define units, invariants, invalid inputs, and boundary behavior before implementation.
-4. Add the smallest type or contract needed by that behavior.
-5. Write readable tests as examples of intended behavior.
-6. Implement only enough to satisfy the active milestone.
-7. Run `./mvnw test` during development and `./mvnw verify` before completion.
-8. Update documentation and mark TODOs complete only when the milestone completion statement is true.
