@@ -201,17 +201,6 @@ For each milestone:
 
 Do not copy a future target structure into the repository in advance. Let tests and current responsibilities drive each addition.
 
-## 8. Review checklist
-
-Before completing a change, verify:
-
-- [ ] The change belongs to the active milestone.
-- [ ] New quantities use explicit units and validation.
-- [ ] JavaFX imports exist only in presentation code.
-- [ ] Collections and results crossing layers are immutable snapshots.
-- [ ] Grid ordering and boundary behavior remain deterministic.
-- [ ] RF equations document meaning, assumptions, limits, and reference cases.
-- [ ] UI handlers delegate instead of calculating.
 - [ ] No interface, framework, concurrency, or abstraction was added without a current need.
 - [ ] Tests cover normal behavior, invalid inputs, and relevant boundaries.
 - [ ] Educational and non-operational limitations remain visible.
