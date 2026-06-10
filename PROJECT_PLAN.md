@@ -85,7 +85,83 @@ Avoid creating empty packages merely to match the plan. Add a package when the c
 ## 5. Development workflow and milestone rules
 
 1. Work on one milestone at a time; keep later ideas out of the current implementation.
-@@ -157,119 +159,119 @@ Each milestone should produce one small, understandable result. Complete its TOD
+- [ ] Create a minimal programmatically constructed window.
+- [ ] Keep application startup separate from future simulation logic.
+- [ ] Document the local run command.
+
+**Not yet:** Final UI design, Canvas rendering, simulation, or background tasks.
+
+**Done when:** `./mvnw javafx:run` opens the minimal window in a graphical environment and `./mvnw verify` still passes.
+
+## 6. Testing strategy
+
+Testing should concentrate below the JavaFX layer, where behavior is fast and deterministic to verify.
+
+- Write unit tests for values, formulas, grids, validation rules, and model boundaries.
+- Use deterministic reference cases for simulation output. Given identical inputs and configuration, results should be identical within a documented floating-point tolerance.
+- Choose tolerances deliberately for floating-point comparisons. Explain whether a test uses absolute tolerance, relative tolerance, or both, and why.
+- Add architecture checks when useful to prevent JavaFX dependencies from entering domain, simulation, or scene packages.
+- Add integration tests for application workflows only when unit tests cannot give sufficient confidence.
+- Keep UI testing minimal. Test calculations, normalization, and workflow decisions beneath JavaFX, and manually validate essential rendering behavior.
+- Include explicit edge cases where relevant: zero and negative values, invalid or reversed bounds, unsupported units, empty scenes, empty grids, extreme resolutions, and sample points at or near a source.
+@@ -129,106 +134,123 @@ Before completing any RF model, document all of the following near its design or
+- Singularity and boundary handling, including behavior at or near a source.
+- Expected qualitative behavior, such as whether output should decrease with distance.
+- Known limitations and effects deliberately omitted.
+- One or more reference cases used by automated tests, including the source of expected values.
+
+Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and `fieldStrengthDbm` where practical. Never mix linear and logarithmic quantities silently: conversions between watts, milliwatts, dBW, dBm, ratios, and decibels must be explicit, named, documented, and tested. Keep the educational disclaimer visible wherever model results could be misunderstood.
+
+## Engineering principles
+
+- Prefer a red-green-refactor TDD cycle for deterministic domain, scene,
+  simulation, visualization, and application behavior.
+- Keep designs simple and limited to the active milestone.
+- Remove duplication when it represents the same stable knowledge or rule;
+  do not create premature shared abstractions.
+- Apply SOLID principles when they clarify a current responsibility or
+  dependency boundary, not as a reason to add unnecessary interfaces or layers.
+- Refactor after behavior is protected by tests.
+- Treat readable names, explicit units, focused responsibilities, and clear
+  validation as the project's practical definition of clean code.
+
+  ## 8. Milestone roadmap
+
+Each milestone should produce one small, understandable result. Complete its TODOs and checks before moving on. If a milestone still feels too large while working on it, split it again rather than expanding its scope.
+
+### Milestone 0 — Maven and test foundation
+
+**Goal:** Establish a reproducible Java 21 build before adding JavaFX or RF concepts.
+
+- [x] Research compatible Java 21, Maven plugin, and JUnit 5 versions.
+- [x] Configure one Maven module and the `com.rfsimulator` base package.
+- [x] Add and verify the Maven Wrapper.
+- [x] Add one small non-UI JUnit 5 test.
+- [x] Document local build and test commands.
+
+**Not yet:** JavaFX, RF behavior, grids, persistence, or rendering.
+
+**Done when:** A fresh checkout can run `./mvnw test` and `./mvnw verify` with Java 21.
+
+### Milestone 0.5 — Multi-module build foundation
+
+**Goal:** Establish an incremental Maven reactor that enforces the first architectural boundary.
+
+- [ ] Convert the root POM into a parent and reactor aggregator.
+- [ ] Create `rf-desktop` and move the current launcher, UI placeholder, and foundation test into it.
+- [ ] Centralize dependency and plugin versions without injecting JavaFX into lower-level modules.
+- [ ] Document how future modules are introduced only when they receive real responsibilities.
+- [ ] Confirm the complete active reactor builds from the repository root.
+
+**Not yet:** Empty domain, scene, simulation, application, visualization, or persistence modules; JPMS descriptors; RF behavior.
+
+**Done when:** A fresh checkout can run `./mvnw test` and `./mvnw verify` from the root, and all current source belongs to `rf-desktop`.
+
+### Milestone 1 — Minimal JavaFX application
+
+**Goal:** Learn the JavaFX application lifecycle with the smallest possible window.
+
+- [ ] Add JavaFX Controls and the JavaFX Maven Plugin to `rf-desktop` only.
 - [ ] Create a minimal programmatically constructed window.
 - [ ] Keep application startup separate from future simulation logic.
 - [ ] Document the local run command.
