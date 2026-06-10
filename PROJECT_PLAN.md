@@ -458,9 +458,3 @@ Each milestone should produce one small, understandable result. Complete its TOD
 **Not yet:** Professional reporting or certification output.
 
 **Done when:** Each chart communicates a documented learning point without obscuring model limitations.
-
-## 9. Suggested next step for the owner
-
-Complete **Milestone 0.5 personally**. Convert the existing single-module build into a parent reactor with one real child module, `rf-desktop`, while preserving the current build behavior. Understand the difference between Maven reactor modules and optional JPMS descriptors before deciding whether JPMS is useful later.
-
-Keep this milestone limited to build structure and source movement. Do not create empty future modules or begin RF behavior. Run the complete root build yourself, and do not begin Milestone 1 until the Milestone 0.5 completion statement is true.
