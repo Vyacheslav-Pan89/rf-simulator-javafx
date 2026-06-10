@@ -36,7 +36,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.rfsimulator.RfSimulatorLauncher</mainClass>
+                    <mainClass>com.rfsimulator.ui.RFSimulatorLauncher</mainClass>
                 </configuration>
             </plugin>
         </plugins>

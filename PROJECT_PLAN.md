@@ -179,9 +179,9 @@ Each milestone should produce one small, understandable result. Complete its TOD
 **Goal:** Learn the JavaFX application lifecycle with the smallest possible window.
 
 - [x] Add JavaFX Controls and the JavaFX Maven Plugin to `rf-desktop` only.
-- [ ] Create a minimal programmatically constructed window.
-- [ ] Keep application startup separate from future simulation logic.
-- [ ] Document the local run command.
+- [x] Create a minimal programmatically constructed window.
+- [x] Keep application startup separate from future simulation logic.
+- [x] Document the local run command.
 
 **Not yet:** Final UI design, Canvas rendering, simulation, or background tasks.
 
