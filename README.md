@@ -22,6 +22,7 @@ The Maven and test foundation is complete. No application or simulation function
 See [`PROJECT_PLAN.md`](PROJECT_PLAN.md) for:
 
 - the planned architecture;
+- the target design and responsibility boundaries in [`DESIGN_GUIDE.md`](DESIGN_GUIDE.md);
 - development rules;
 - testing and RF-documentation guidance;
 - the milestone roadmap;
