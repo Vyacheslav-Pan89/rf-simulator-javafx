@@ -350,7 +350,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Compare more than one educational model through a stable contract.
 
-@@ -393,65 +419,66 @@ Each milestone should produce one small, understandable result. Complete its TOD
 - [ ] Document every simulator simplification and non-operational limitation.
 - [ ] Build one scenario using existing lower-level models.
 - [ ] Add qualitative and reference tests where practical.
