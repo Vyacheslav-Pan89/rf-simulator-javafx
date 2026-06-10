@@ -344,4 +344,123 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Compare more than one educational model through a stable contract.
 
-README.md
+- [ ] Add a second propagation model only after documenting its educational purpose.
+- [ ] Make model selection explicit.
+- [ ] Attach assumptions, units, valid range, and limitations as model metadata.
+- [ ] Add comparison and reference tests.
+
+**Not yet:** Obstacles, terrain, antenna patterns, or navigation systems.
+
+**Done when:** Models can be selected without changing sampling workflows and their differences can be explained.
+
+### Milestone 16 — Obstacles and simple attenuation
+
+**Goal:** Add one limited environmental effect without pretending to perform full-wave simulation.
+
+- [ ] Define one simple obstacle representation.
+- [ ] Add one documented attenuation rule.
+- [ ] Test the effect disabled, enabled, and at geometric boundaries.
+- [ ] State omitted physical effects and model limitations prominently.
+
+**Not yet:** Terrain, antenna patterns, or realistic material databases.
+
+**Done when:** The obstacle effect can be explained, isolated, and tested deterministically.
+
+### Milestone 17 — Terrain model
+
+**Goal:** Introduce one simplified terrain effect separately from obstacles.
+
+- [ ] Define the minimum terrain representation needed by the selected effect.
+- [ ] Document geometry, units, assumptions, and limitations.
+- [ ] Add isolated terrain-effect tests.
+- [ ] Define how terrain and obstacle effects interact, if they do.
+
+**Not yet:** Full terrain engines or full-wave simulation.
+
+**Done when:** Terrain behavior is independently understandable and tested.
+
+### Milestone 18 — Antenna gain patterns
+
+**Goal:** Add directional source behavior with explicit angle and gain conventions.
+
+- [ ] Define angle orientation and gain units.
+- [ ] Add one simple immutable antenna pattern.
+- [ ] Document interpolation and boundary behavior.
+- [ ] Test expected directions and pattern boundaries.
+
+**Not yet:** Professional antenna modeling or large pattern libraries.
+
+**Done when:** Directional behavior is documented, deterministic, and independently tested.
+
+### Milestone 19 — Educational radio-navigation scenario
+
+**Goal:** Apply stable core concepts to one carefully scoped navigation-system lesson.
+
+- [ ] Choose one of ILS, VOR, or DME based on a clear learning objective.
+- [ ] Research and document the real-world concept using reputable references.
+- [ ] Document every simulator simplification and non-operational limitation.
+- [ ] Build one scenario using existing lower-level models.
+- [ ] Add qualitative and reference tests where practical.
+
+**Not yet:** The other navigation systems or operational guidance.
+
+**Done when:** The scenario teaches one concept clearly and cannot be mistaken for an operational tool.
+
+### Milestone 20 — Additional radio-navigation scenarios
+
+**Goal:** Add the remaining educational ILS, VOR, or DME scenarios one at a time.
+
+- [ ] Add only one new navigation scenario per focused change.
+- [ ] Reuse stable lower-level models instead of bypassing architecture.
+- [ ] Document real concepts, simplifications, and limitations for each scenario.
+- [ ] Add suitable qualitative and reference tests.
+
+**Not yet:** Certification, operational guidance, or flight-safety decisions.
+
+**Done when:** Each added scenario is independently documented, understandable, and tested.
+
+### Milestone 21 — Versioned scenario persistence
+
+**Goal:** Save and reload stable educational scenarios without losing their meaning.
+
+- [ ] Decide whether persistence belongs in `rf-application` or justifies a separate `rf-persistence` module.
+- [ ] Design a versioned scenario format.
+- [ ] Preserve units and model metadata explicitly.
+- [ ] Validate imports and report unsupported or invalid data clearly.
+- [ ] Test representative round trips, malformed data, and unsupported versions.
+
+**Not yet:** Charts, probes, or broad compatibility promises.
+
+**Done when:** Supported scenarios round-trip reliably and invalid input fails safely.
+
+### Milestone 22 — Probes and coverage metrics
+
+**Goal:** Add small analysis tools that help explain simulation results.
+
+- [ ] Add one probe or metric at a time.
+- [ ] State units, calculation source, assumptions, and limitations.
+- [ ] Test calculations and boundary behavior below the UI.
+- [ ] Keep analysis output educational and non-certifying.
+
+**Not yet:** Charts or a large engineering-tool suite.
+
+**Done when:** Each probe or metric is documented, deterministic, and useful for learning.
+
+### Milestone 23 — Charts and comparison tools
+
+**Goal:** Present stable results and model comparisons in focused educational charts.
+
+- [ ] Add only charts that answer a clear learning question.
+- [ ] Label units, models, assumptions, and ranges.
+- [ ] Keep chart-data preparation testable below JavaFX.
+- [ ] Validate charts against known result snapshots.
+
+**Not yet:** Professional reporting or certification output.
+
+**Done when:** Each chart communicates a documented learning point without obscuring model limitations.
+
+## 9. Suggested next step for the owner
+
+Complete **Milestone 0.5 personally**. Convert the existing single-module build into a parent reactor with one real child module, `rf-desktop`, while preserving the current build behavior. Understand the difference between Maven reactor modules and optional JPMS descriptors before deciding whether JPMS is useful later.
+
+Keep this milestone limited to build structure and source movement. Do not create empty future modules or begin RF behavior. Run the complete root build yourself, and do not begin Milestone 1 until the Milestone 0.5 completion statement is true.
