@@ -1,6 +1,5 @@
 # RF Simulator JavaFX Project Plan
 
-This is a practical roadmap for the repository owner. Keep it lightweight: work on one milestone at a time, learn by implementing it personally, and leave tasks unchecked until they are complete.
 This is a practical roadmap for the repository owner. Keep it lightweight: work on one milestone at a time, learn by implementing it personally, and leave tasks unchecked until they are complete. Use [`DESIGN_GUIDE.md`](DESIGN_GUIDE.md) for the target design, responsibility boundaries, and implementation review checklist.
 
 ## 1. Project purpose and non-goals
@@ -14,7 +13,7 @@ The project should make both the software design and the RF reasoning understand
 
 ### Non-goals
 
-- RF Simulator is **not** a professional electromagnetic solver, certification tool, or safety-analysis tool.
+- RF Simulator is **not** a professional electromagnetic solver, certification tool, operational navigation tool, or safety-analysis tool.
 - It must not claim that simplified output predicts real installations accurately.
 - Full-wave electromagnetic simulation, regulatory compliance analysis, and safety-critical decisions are outside the project scope.
 - Advanced 3D rendering is not an early goal; begin with a simple 2D JavaFX Canvas view.
@@ -27,13 +26,23 @@ The owner should plan around the following choices while introducing them only w
 - Java 21.
 - JavaFX for the desktop presentation layer, initially using programmatic UI construction.
 - Maven with the Maven Wrapper so builds do not depend on a globally installed Maven version.
+- JUnit 5 for automated tests.
+- Base package `com.rfsimulator`.
+- An incremental Maven multi-module reactor, with modules introduced only when they gain real responsibilities.
+- No Spring or dependency-injection framework. Prefer explicit constructors and straightforward object creation.
+- No FXML initially unless the owner later identifies and records a clear benefit.
+- No `module-info.java` initially unless the owner later identifies and records a clear reason.
+
+## 3. Architectural layers and dependency rules
+
 The conceptual layers are:
-```
+
+```text
 Domain Core
     ↓
-Simulation Engine
-    ↓
 Scene Model
+    ↓
+Simulation Engine
     ↓
 Application Layer
     ↓
@@ -54,8 +63,6 @@ The diagram shows conceptual construction from foundational concepts toward user
 
 - Domain, simulation, and scene-model code must not depend on JavaFX.
 - JavaFX-specific code belongs only in presentation or JavaFX visualization packages.
-- Prefer immutable values and Java records where they make invariants and meaning clear.
-- Make units explicit in every API involving physical quantities. Names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and `fieldStrengthDbm` are preferable to ambiguous names.
 - Prefer immutable values and Java records where they make invariants and meaning clear. Never expose mutable internal collections across layer boundaries.
 - Make units explicit in every API involving physical quantities. Use distinct types for linear and logarithmic quantities, and distinguish positions from vectors. Names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and `fieldStrengthDbm` are preferable to ambiguous names.
 - Begin with one source concept and introduce additional source types only when they have genuinely different behavior or invariants.
@@ -85,13 +92,15 @@ Avoid creating empty packages merely to match the plan. Add a package when the c
 ## 5. Development workflow and milestone rules
 
 1. Work on one milestone at a time; keep later ideas out of the current implementation.
-- [ ] Create a minimal programmatically constructed window.
-- [ ] Keep application startup separate from future simulation logic.
-- [ ] Document the local run command.
-
-**Not yet:** Final UI design, Canvas rendering, simulation, or background tasks.
-
-**Done when:** `./mvnw javafx:run` opens the minimal window in a graphical environment and `./mvnw verify` still passes.
+2. Implement and test small, understandable slices.
+3. Write tests alongside domain and simulation behavior.
+4. Use the Maven Wrapper: run `./mvnw test` during development and `./mvnw verify` before completing a milestone.
+5. Run `./mvnw -pl rf-desktop javafx:run` for manual UI checks. A failure caused only by a headless environment is an environment limitation, not an application failure.
+6. Keep commits small and focused.
+7. Review every dependency before adding it.
+8. Preserve explicit units and deterministic results.
+9. Profile before optimizing; avoid premature concurrency, advanced rendering, and abstraction.
+10. Update this plan only when project scope genuinely changes.
 
 ## 6. Testing strategy
 
@@ -104,7 +113,17 @@ Testing should concentrate below the JavaFX layer, where behavior is fast and de
 - Add integration tests for application workflows only when unit tests cannot give sufficient confidence.
 - Keep UI testing minimal. Test calculations, normalization, and workflow decisions beneath JavaFX, and manually validate essential rendering behavior.
 - Include explicit edge cases where relevant: zero and negative values, invalid or reversed bounds, unsupported units, empty scenes, empty grids, extreme resolutions, and sample points at or near a source.
-@@ -129,106 +134,123 @@ Before completing any RF model, document all of the following near its design or
+- Test failures and validation messages, not only successful paths.
+- Keep tests readable as examples of intended behavior and RF assumptions.
+
+## 7. RF model documentation rules
+
+Before completing any RF model, document all of the following near its design or public contract:
+
+- The equation in readable notation.
+- Every input and output unit.
+- Assumptions made by the model.
+- Valid operating range and conditions.
 - Singularity and boundary handling, including behavior at or near a source.
 - Expected qualitative behavior, such as whether output should decrease with distance.
 - Known limitations and effects deliberately omitted.
@@ -112,7 +131,7 @@ Testing should concentrate below the JavaFX layer, where behavior is fast and de
 
 Use unambiguous names such as `frequencyHz`, `distanceMeters`, `powerWatts`, and `fieldStrengthDbm` where practical. Never mix linear and logarithmic quantities silently: conversions between watts, milliwatts, dBW, dBm, ratios, and decibels must be explicit, named, documented, and tested. Keep the educational disclaimer visible wherever model results could be misunderstood.
 
-  ## 8. Engineering principles
+## 8. Engineering principles
 
 - Prefer a red-green-refactor TDD cycle for deterministic domain, scene, simulation, visualization, and application behavior.
 - Keep designs simple and limited to the active milestone by applying KISS and YAGNI.
@@ -145,11 +164,11 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Establish an incremental Maven reactor that enforces the first architectural boundary.
 
-- [ ] Convert the root POM into a parent and reactor aggregator.
-- [ ] Create `rf-desktop` and move the current launcher, UI placeholder, and foundation test into it.
-- [ ] Centralize dependency and plugin versions without injecting JavaFX into lower-level modules.
-- [ ] Document how future modules are introduced only when they receive real responsibilities.
-- [ ] Confirm the complete active reactor builds from the repository root.
+- [x] Convert the root POM into a parent and reactor aggregator.
+- [x] Create `rf-desktop` and move the current foundation test into it.
+- [x] Centralize dependency and plugin versions without injecting JavaFX into lower-level modules.
+- [x] Document how future modules are introduced only when they receive real responsibilities.
+- [x] Confirm the complete active reactor builds from the repository root.
 
 **Not yet:** Empty domain, scene, simulation, application, visualization, or persistence modules; JPMS descriptors; RF behavior.
 
@@ -159,14 +178,14 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Learn the JavaFX application lifecycle with the smallest possible window.
 
-- [ ] Add JavaFX Controls and the JavaFX Maven Plugin to `rf-desktop` only.
+- [x] Add JavaFX Controls and the JavaFX Maven Plugin to `rf-desktop` only.
 - [ ] Create a minimal programmatically constructed window.
 - [ ] Keep application startup separate from future simulation logic.
 - [ ] Document the local run command.
 
 **Not yet:** Final UI design, Canvas rendering, simulation, or background tasks.
 
-**Done when:** `./mvnw javafx:run` opens the minimal window in a graphical environment and `./mvnw verify` still passes.
+**Done when:** `./mvnw -pl rf-desktop javafx:run` opens the minimal window in a graphical environment and `./mvnw verify` still passes.
 
 ### Milestone 2 — Units and scalar RF values
 
@@ -185,8 +204,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Add the minimum immutable geometry vocabulary needed by a 2D simulator.
 
-- [ ] Design immutable 2D positions and vectors.
-- [ ] Define coordinate and distance conventions.
 - [ ] Design separate immutable 2D position and vector concepts.
 - [ ] Define coordinate, displacement, direction, and distance conventions.
 - [ ] Add only operations required by the next milestone.
@@ -200,8 +217,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Describe valid rectangular sampling grids without generating samples yet.
 
-- [ ] Define bounds and resolution conventions.
-- [ ] Decide whether bounds represent points, cells, or both.
 - [ ] Define bounds and resolution or spacing conventions.
 - [ ] Decide whether bounds represent points or cells and whether boundaries are included.
 - [ ] Validate reversed, empty, and invalid bounds and resolutions.
@@ -215,8 +230,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Generate sampling positions in a documented, repeatable order.
 
-- [ ] Generate positions from a valid grid definition.
-- [ ] Document ordering and boundary inclusion rules.
 - [ ] Generate positions from a valid grid definition without combining generation and result storage.
 - [ ] Document ordering, floating-point boundary behavior, and boundary inclusion rules.
 - [ ] Test sample counts, coordinates, ordering, and non-square grids.
@@ -230,8 +243,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Define the inputs and output shape for one educational propagation calculation.
 
-- [ ] Design one minimal immutable source type.
-- [ ] Define a small propagation-model contract with explicit units.
 - [ ] Design one minimal immutable source type without overlapping source representations.
 - [ ] Define a small propagation-model contract whose input and output meanings and units are explicit.
 - [ ] Decide and document behavior at or near a source.
@@ -260,8 +271,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 **Goal:** Apply the first propagation model to a grid and produce a stable result snapshot.
 
 - [ ] Sample the model at generated grid positions.
-- [ ] Define an immutable simulation-result snapshot.
-- [ ] Preserve a clear relationship between positions and sampled values.
 - [ ] Define an immutable simulation-result snapshot with immutable collections.
 - [ ] Preserve a clear ordered relationship between positions and sampled values.
 - [ ] Test empty inputs, repeatability, ordering, and representative results.
@@ -289,7 +298,18 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 - [ ] Render a heatmap on JavaFX Canvas.
 - [ ] Render source markers and a readable legend.
-@@ -288,51 +290,51 @@ Each milestone should produce one small, understandable result. Complete its TOD
+- [ ] Keep calculations and normalization out of rendering code.
+- [ ] Manually compare the drawing with a known result.
+
+**Not yet:** Resizing, background execution, editing, or polished styling.
+
+**Done when:** A known result, markers, and legend render correctly without changing core-layer dependencies.
+
+### Milestone 11 — Resizing and background execution
+
+**Goal:** Keep the JavaFX interface responsive while displaying recalculated results.
+
+- [ ] Make Canvas rendering respond predictably to window resizing.
 - [ ] Run expensive calculation work outside the JavaFX Application Thread.
 - [ ] Publish only immutable snapshots to presentation code.
 - [ ] Handle background success, failure, and cancellation where needed.
@@ -315,7 +335,6 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Coordinate scene changes and simulation reruns without putting workflow logic in JavaFX controls.
 
-- [ ] Define one clear owner for mutable application state.
 - [ ] Define one clear owner for mutable application state without exposing mutable internal collections.
 - [ ] Add small commands or use cases for source placement and parameter updates.
 - [ ] Coordinate simulation reruns through the application layer.

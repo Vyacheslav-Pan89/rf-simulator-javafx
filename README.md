@@ -2,13 +2,13 @@
 
 RF Simulator is a planned educational JavaFX desktop application for exploring simplified radio-frequency propagation concepts while learning professional Java software development.
 
-The project is developed incrementally with Java 21, JavaFX, a Maven multi-module build, and JUnit 5.
+The project is developed incrementally with Java 21, JavaFX, JUnit 5, and a Maven multi-module build.
 
 > **Important:** RF Simulator is intended for education only. It is not a professional electromagnetic solver, certification tool, operational navigation tool, or safety-analysis tool.
 
 ## Current Status
 
-The reproducible Maven and test foundation is complete. The next focused step is to establish the incremental multi-module reactor before completing the minimal JavaFX application.
+The reproducible multi-module Maven foundation is complete. The next focused step is to implement the minimal JavaFX application.
 
 No RF simulation behavior has been implemented yet.
 
