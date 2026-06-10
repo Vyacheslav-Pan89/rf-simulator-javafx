@@ -19,6 +19,8 @@ No RF simulation behavior has been implemented yet.
 - Keep physical units, assumptions, and model limitations explicit.
 - Keep simulation behavior independent of JavaFX presentation code.
 - Use Maven modules to enforce stable dependency boundaries as responsibilities are introduced.
+- Practice clean, simple, test-driven Java development using KISS, YAGNI,
+  responsible DRY, and SOLID principles where they improve the current design.
 
 ## Intended Maven Modules
 
