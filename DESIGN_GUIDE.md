@@ -109,6 +109,19 @@ Packages organize related types inside modules. Add a package only when the acti
 9. Profile before optimizing; avoid premature concurrency, advanced rendering, and abstraction.
 10. Update this plan only when project scope genuinely changes.
 
+## Engineering principles
+
+- Prefer a red-green-refactor TDD cycle for deterministic domain, scene,
+  simulation, visualization, and application behavior.
+- Keep designs simple and limited to the active milestone.
+- Remove duplication when it represents the same stable knowledge or rule;
+  do not create premature shared abstractions.
+- Apply SOLID principles when they clarify a current responsibility or
+  dependency boundary, not as a reason to add unnecessary interfaces or layers.
+- Refactor after behavior is protected by tests.
+- Treat readable names, explicit units, focused responsibilities, and clear
+  validation as the project's practical definition of clean code.
+
 ## 6. Testing strategy
 
 Testing should concentrate below the JavaFX layer, where behavior is fast and deterministic to verify.
