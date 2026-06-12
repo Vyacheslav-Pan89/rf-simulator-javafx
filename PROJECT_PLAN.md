@@ -191,10 +191,10 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Establish explicit unit conventions for later calculations.
 
-- [ ] Define conventions for distance, frequency, and power.
-- [ ] Design immutable scalar values with clear validation rules.
-- [ ] Make linear and logarithmic power conversions explicit.
-- [ ] Test equality, conversions, zero, negative, and non-finite inputs where relevant.
+- [x] Define conventions for distance, frequency, and power.
+- [x] Design immutable scalar values with clear validation rules.
+- [x] Make linear and logarithmic power conversions explicit.
+- [x] Test equality, conversions, zero, negative, and non-finite inputs where relevant.
 
 **Not yet:** Vectors, grids, sources, or propagation formulas.
 

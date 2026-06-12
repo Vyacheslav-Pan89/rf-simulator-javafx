@@ -8,7 +8,10 @@ The project is developed incrementally with Java 21, JavaFX, JUnit 5, and a Mave
 
 ## Current Status
 
-The reproducible multi-module Maven foundation and minimal JavaFX application are complete. The next focused step is to establish explicit unit conventions and the first immutable scalar RF values.
+The reproducible multi-module Maven foundation, minimal JavaFX application,
+and first immutable scalar RF values are complete. The next focused step is
+to establish the minimum immutable geometry vocabulary needed by the
+two-dimensional simulator.
 
 No RF simulation behavior has been implemented yet.
 

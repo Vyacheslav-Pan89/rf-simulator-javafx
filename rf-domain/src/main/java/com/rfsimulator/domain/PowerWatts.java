@@ -18,4 +18,11 @@ public record PowerWatts(double watts) {
 
     }
 
+    public PowerDbm toDbm() {
+        if (watts == 0.0) {
+            throw new IllegalStateException("Zero watts cannot be converted to finite dBm");
+        }
+        double powerDbm = 10.0 * Math.log10(watts / 0.001);
+        return new PowerDbm(powerDbm);
+    }
 }

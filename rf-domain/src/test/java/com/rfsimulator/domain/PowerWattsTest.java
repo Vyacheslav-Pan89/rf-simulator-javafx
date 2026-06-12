@@ -56,4 +56,28 @@ public class PowerWattsTest {
         assertEquals(new PowerWatts(400.0), new PowerWatts(400.0));
     }
 
+    @Test
+    public void convertsOneMilliwattToZeroDbm() {
+        double dbm = new PowerWatts(0.001).toDbm().dbm();
+        assertEquals(0.0, dbm, 1e-12);
+    }
+
+    @Test
+    public void convertsOneWattToThirtyDbm() {
+        double dbm = new PowerWatts(1.0).toDbm().dbm();
+        assertEquals(30.0, dbm, 1e-12);
+    }
+
+    @Test
+    public void convertsTenWattsToFortyDbm() {
+        double dbm = new PowerWatts(10).toDbm().dbm();
+        assertEquals(40.0, dbm, 1e-12);
+    }
+
+    @Test
+    public void rejectsConvertingZeroWattsToDbm() {
+        assertThrows(IllegalStateException.class, () ->
+                new PowerWatts(0.0).toDbm()
+        );
+    }
 }

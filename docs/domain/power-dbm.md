@@ -26,11 +26,15 @@ and negative zero therefore produce equal `PowerDbm` values.
 
 ## Conversion To Watts
 
-Every finite dBm value can be converted explicitly to `PowerWatts` using:
+A dBm value can be converted explicitly to `PowerWatts` using:
 
 ```text
 watts = 0.001 * 10^(dBm / 10)
 ```
+
+If the calculated watt value exceeds the largest finite `double`, the
+conversion throws `IllegalStateException`. The `PowerDbm` value itself remains
+valid because conversion limitations do not change its meaning.
 
 Reference conversions:
 
@@ -41,8 +45,9 @@ Reference conversions:
 | 40.0 | 10.0 |
 
 Floating-point calculations may produce small rounding differences from the
-mathematical result. Conversion tests should therefore use a deliberately
-chosen tolerance.
+mathematical result. Extremely small results may underflow to zero. Conversion
+tests should therefore use a deliberately chosen tolerance and include
+relevant boundary behavior.
 
 ## Current Scope
 
