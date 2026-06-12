@@ -13,6 +13,7 @@ accessor always use meters.
 - Values must be finite.
 - Values must be greater than or equal to zero.
 - Zero represents no separation.
+- Negative zero is accepted and stored as canonical positive zero.
 
 Negative values, `NaN`, positive infinity, and negative infinity are invalid.
 Constructing a `Distance` with an invalid value throws
@@ -21,7 +22,8 @@ Constructing a `Distance` with an invalid value throws
 ## Equality
 
 `Distance` uses the value-based equality supplied by a Java record. Two
-instances containing the same meter value are equal.
+instances containing the same canonical meter value are equal. Positive zero
+and negative zero therefore produce equal `Distance` values.
 
 ## Current Scope
 

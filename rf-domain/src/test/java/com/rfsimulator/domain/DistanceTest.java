@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 public class DistanceTest {
 
     @Test
@@ -45,6 +46,14 @@ public class DistanceTest {
         assertThrows(IllegalArgumentException.class, () ->
                 new Distance(Double.NEGATIVE_INFINITY)
         );
+    }
+
+    @Test
+    public void canonicalizesNegativeZero() {
+        Distance distance = new Distance(-0.0);
+
+        assertEquals(new Distance(0.0), distance);
+        assertEquals(0.0, distance.meters());
     }
 
 }
