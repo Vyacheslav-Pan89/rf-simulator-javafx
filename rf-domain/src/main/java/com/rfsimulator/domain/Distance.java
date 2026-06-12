@@ -1,6 +1,7 @@
 package com.rfsimulator.domain;
 
 public record Distance(double meters) {
+
     public Distance {
 
         if (!Double.isFinite(meters)) {
