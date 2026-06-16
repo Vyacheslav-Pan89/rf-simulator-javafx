@@ -29,6 +29,14 @@ For example, the displacement from position `(10, 20)` meters to position
 `(13, 24)` meters is vector `(3, 4)` meters. The distance between the
 positions and the vector magnitude are both `5` meters.
 
+## Boundary Behavior
+
+- Constructing positions or vectors with non-finite components fails.
+- Negative zero coordinates and components are canonicalized to positive zero.
+- A zero vector is valid and has zero magnitude.
+- Distance and magnitude results are represented with `Distance`.
+- Null target positions are invalid for displacement and distance queries.
+
 ## Current Scope
 
 Current geometry supports only the operations required to express displacement

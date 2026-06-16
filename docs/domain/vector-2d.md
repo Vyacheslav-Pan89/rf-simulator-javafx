@@ -35,7 +35,8 @@ displacement. Its magnitude is zero.
 magnitudeMeters = sqrt(deltaXMeters^2 + deltaYMeters^2)
 ```
 
-The result is returned as a `Distance`.
+The result is returned as a `Distance`. The calculation should avoid
+unnecessary overflow for large finite components.
 
 ## Current Scope
 

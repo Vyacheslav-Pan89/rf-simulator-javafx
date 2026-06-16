@@ -34,6 +34,9 @@ deltaYMeters = other.yMeters - this.yMeters
 
 Passing `null` throws `NullPointerException`.
 
+If subtracting coordinates produces a non-finite vector component, the
+resulting `Vector2D` validation rejects it with `IllegalArgumentException`.
+
 ## Distance To Another Position
 
 `distanceTo(Position2D other)` returns the non-negative Euclidean distance
@@ -46,8 +49,12 @@ distanceMeters = sqrt(
 )
 ```
 
-The distance from a position to itself is zero. Passing `null` throws
+The distance is calculated through the displacement vector magnitude. The
+distance from a position to itself is zero. Passing `null` throws
 `NullPointerException`.
+
+Large finite distances are supported when the resulting displacement remains
+finite.
 
 ## Current Scope
 

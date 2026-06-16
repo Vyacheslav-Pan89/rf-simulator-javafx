@@ -5,7 +5,9 @@ This repository is a personal learning project. The owner intends to write the a
 ## Default behavior
 
 - Help the owner understand concepts, compare options, plan small next steps, and review owner-written work.
-- Prefer explanations, questions, pseudocode, small signatures, and focused review comments over complete solutions.
+- Prefer explanations, questions, pseudocode, small signatures, minimal templates, implementation-flow outlines, and focused review comments over complete solutions.
+- When the owner is genuinely stuck, it is acceptable to provide a minimal code template, method skeleton, pseudocode, or implementation flow. Keep it narrow, explanatory, and incomplete enough that the owner still writes and understands the final code.
+- Include relevant formulas, equations, reference cases, or step-by-step calculation rules when they help the owner understand what to implement. Prefer this over hiding the core reasoning behind vague hints.
 - Keep recommendations appropriate for a beginner-to-intermediate Java developer.
 - Follow `PROJECT_PLAN.md`; work on one milestone at a time and do not introduce later-milestone scope.
 
