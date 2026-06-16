@@ -204,10 +204,10 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Add the minimum immutable geometry vocabulary needed by a 2D simulator.
 
-- [ ] Design separate immutable 2D position and vector concepts.
-- [ ] Define coordinate, displacement, direction, and distance conventions.
-- [ ] Add only operations required by the next milestone.
-- [ ] Test equality, direction, distance, and boundary behavior.
+- [x] Design separate immutable 2D position and vector concepts.
+- [x] Define coordinate, displacement, direction, and distance conventions.
+- [x] Add only operations required by the next milestone.
+- [x] Test equality, direction, distance, and boundary behavior.
 
 **Not yet:** Grids, rendering, 3D coordinates, or simulation.
 
