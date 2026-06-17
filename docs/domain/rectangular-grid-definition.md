@@ -47,8 +47,9 @@ Non-square grids are valid. `xSamples` and `ySamples` may be different.
 
 ## Valid Values
 
-Constructing a `RectangularGridDefinition` with invalid values throws
-`IllegalArgumentException`.
+Constructing a `RectangularGridDefinition` with invalid values throws either
+`NullPointerException` for missing required positions or
+`IllegalArgumentException` for invalid bounds and sample counts.
 
 Invalid values include:
 
@@ -59,6 +60,10 @@ Invalid values include:
 - `ySamples` less than `2`.
 
 Coordinate finiteness is enforced by `Position2D`.
+
+Null minimum or maximum positions throw `NullPointerException`. Reversed
+bounds, equal bounds, and invalid sample counts throw
+`IllegalArgumentException`.
 
 ## Equality
 

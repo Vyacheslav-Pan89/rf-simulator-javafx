@@ -217,10 +217,10 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Describe valid rectangular sampling grids without generating samples yet.
 
-- [ ] Define bounds and resolution or spacing conventions.
-- [ ] Decide whether bounds represent points or cells and whether boundaries are included.
-- [ ] Validate reversed, empty, and invalid bounds and resolutions.
-- [ ] Test valid and invalid definitions.
+- [x] Define bounds and resolution or spacing conventions.
+- [x] Decide whether bounds represent points or cells and whether boundaries are included.
+- [x] Validate reversed, empty, and invalid bounds and resolutions.
+- [x] Test valid and invalid definitions.
 
 **Not yet:** Point generation, rendering, or RF calculations.
 

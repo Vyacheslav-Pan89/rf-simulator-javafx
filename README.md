@@ -9,9 +9,10 @@ The project is developed incrementally with Java 21, JavaFX, JUnit 5, and a Mave
 ## Current Status
 
 The reproducible multi-module Maven foundation, minimal JavaFX application,
-first immutable scalar RF values, and minimum immutable two-dimensional
-geometry vocabulary are complete. The next focused step is to define valid
-rectangular sampling grids.
+first immutable scalar RF values, minimum immutable two-dimensional geometry
+vocabulary, and valid rectangular grid definitions are complete. The next
+focused step is to generate deterministic sample positions from those grid
+definitions.
 
 No RF simulation behavior has been implemented yet.
 
