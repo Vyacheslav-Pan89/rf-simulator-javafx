@@ -15,6 +15,7 @@
     <modules>
         <module>rf-desktop</module>
         <module>rf-domain</module>
+        <module>rf-scene</module>
     </modules>
 
     <properties>
@@ -37,6 +38,12 @@
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.rfsimulator</groupId>
+                <artifactId>rf-domain</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
