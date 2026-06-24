@@ -10,17 +10,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class GridPointGeneratorTest {
     @Test
     public void generatesExpectedSampleCount() {
+        int xSamples = 2;
+        int ySamples = 2;
+        int expectedSampleCount = xSamples * ySamples;
+
         RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
                 new Position2D(0.0, 0.0),
                 new Position2D(10.0, 10.0),
-                2, 2);
+                xSamples, ySamples);
         List<Position2D> position2DS = new GridPointGenerator().generate(gridDefinition);
 
-        assertEquals(4, position2DS.size());
+        assertEquals(expectedSampleCount, position2DS.size());
     }
 
-    // This overlaps with the full row-major-order test. Remove it after the
-    // row-major test asserts the full expected list including both corners.
+    // Focuses on boundary inclusion without repeating the full row-major list.
     @Test
     public void includesMinimumAndMaximumCorners() {
         RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
@@ -33,24 +36,31 @@ public class GridPointGeneratorTest {
         assertEquals(new Position2D(10.0, 10.0), position2DS.getLast());
     }
 
-    // Use a 3 x 3 grid here. A 2 x 2 grid has only corner points:
-    // (0,0), (10,0), (0,10), (10,10), so it cannot contain (5,5).
-    // Prefer asserting the full expected list for row-major order.
+    // A 3 x 3 grid shows both row-major ordering and interior derived-spacing
+    // points.
     @Test
     public void generatesPointsInRowMajorOrder() {
+        List<Position2D> expectedPoints = List.of(
+                new Position2D(0, 0),
+                new Position2D(5, 0),
+                new Position2D(10, 0),
+                new Position2D(0, 5),
+                new Position2D(5, 5),
+                new Position2D(10, 5),
+                new Position2D(0, 10),
+                new Position2D(5, 10),
+                new Position2D(10, 10));
+
         RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
                 new Position2D(0.0, 0.0),
                 new Position2D(10.0, 10.0),
-                2, 2);
-        List<Position2D> position2DS = new GridPointGenerator().generate(gridDefinition);
+                3, 3);
+        List<Position2D> positions = new GridPointGenerator().generate(gridDefinition);
 
-        assertEquals(new Position2D(0.0, 0.0), position2DS.getFirst());
-        assertEquals(new Position2D(10.0, 10.0), position2DS.get(2));
+        assertEquals(expectedPoints, positions);
     }
 
-    // This is a 3 x 2 grid. The expected row-major points are:
-    // (0,0), (5,0), (10,0), (0,10), (5,10), (10,10).
-    // Index 5 is therefore (10,10), not (5,5).
+    // Non-square grids keep x and y sample counts independent.
     @Test
     public void generatesNonSquareGridPoints() {
         RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
@@ -60,25 +70,12 @@ public class GridPointGeneratorTest {
         List<Position2D> position2DS = new GridPointGenerator().generate(gridDefinition);
 
         assertEquals(new Position2D(0.0, 0.0), position2DS.getFirst());
-        assertEquals(new Position2D(5.0, 5.0), position2DS.get(5));
+        assertEquals(new Position2D(10.0, 0.0), position2DS.get(2));
         assertEquals(new Position2D(10.0, 10.0), position2DS.getLast());
     }
 
-    // Remove this test from GridPointGeneratorTest. Invalid sample counts are
-    // already the responsibility of RectangularGridDefinitionTest.
-    // Also, GridPointGenerator().generate(...) is missing 'new'.
-    @Test
-    public void generatesMinimumTwoByTwoGrid() {
-        RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
-                new Position2D(0.0, 0.0),
-                new Position2D(10.0, 10.0),
-                1, 1);
-        assertThrows(IllegalArgumentException.class, () ->
-                GridPointGenerator().generate(gridDefinition));
-    }
-
-    // This overlaps with row-major-order testing. If kept, index 5 in a
-    // 3 x 3 grid is (10,5), so x is 10.0 and y is 5.0.
+    // Checks derived spacing directly instead of relying only on the full
+    // row-major expected list.
     @Test
     public void usesDerivedSpacingBetweenBounds() {
         RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
@@ -89,8 +86,8 @@ public class GridPointGeneratorTest {
         double xStep = (10.0 - 0.0) / (3 - 1);
         double yStep = (10.0 - 0.0) / (3 - 1);
 
-        assertEquals(xStep, position2DS.get(5).xMeters());
-        assertEquals(yStep, position2DS.get(5).yMeters());
+        assertEquals(xStep, position2DS.get(1).xMeters() - position2DS.get(0).xMeters());
+        assertEquals(yStep, position2DS.get(3).yMeters() - position2DS.get(0).yMeters());
     }
 
     @Test
