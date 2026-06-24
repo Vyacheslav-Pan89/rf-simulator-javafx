@@ -230,10 +230,10 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Generate sampling positions in a documented, repeatable order.
 
-- [ ] Generate positions from a valid grid definition without combining generation and result storage.
-- [ ] Document ordering, floating-point boundary behavior, and boundary inclusion rules.
-- [ ] Test sample counts, coordinates, ordering, and non-square grids.
-- [ ] Check behavior at minimum and large practical resolutions.
+- [x] Generate positions from a valid grid definition without combining generation and result storage.
+- [x] Document ordering, floating-point boundary behavior, and boundary inclusion rules.
+- [x] Test sample counts, coordinates, ordering, and non-square grids.
+- [x] Check behavior at minimum and large practical resolutions.
 
 **Not yet:** Rendering or propagation calculations.
 

@@ -106,4 +106,18 @@ public class GridPointGeneratorTest {
 
         assertThrows(UnsupportedOperationException.class, position2DS::removeFirst);
     }
+
+    @Test
+    public void generateLargeResolutionGrid() {
+        RectangularGridDefinition gridDefinition = new RectangularGridDefinition(
+                new Position2D(0.0, 0.0),
+                new Position2D(10.0, 10.0),
+                100, 50);
+
+        List<Position2D> positions = new GridPointGenerator().generate(gridDefinition);
+
+        assertEquals(5000, positions.size());
+        assertEquals(new Position2D(0.0, 0.0), positions.getFirst());
+        assertEquals(new Position2D(10.0, 10.0), positions.getLast());
+    }
 }
