@@ -243,10 +243,10 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Define the inputs and output shape for one educational propagation calculation.
 
-- [ ] Design one minimal immutable source type without overlapping source representations.
-- [ ] Define a small propagation-model contract whose input and output meanings and units are explicit.
-- [ ] Decide and document behavior at or near a source.
-- [ ] Keep all contracts independent of JavaFX.
+- [x] Design one minimal immutable source type without overlapping source representations.
+- [x] Define a small propagation-model contract whose input and output meanings and units are explicit.
+- [x] Decide and document behavior at or near a source.
+- [x] Keep all contracts independent of JavaFX.
 
 **Not yet:** A propagation equation, grid sampling, or multiple source types.
 
@@ -256,11 +256,11 @@ Each milestone should produce one small, understandable result. Complete its TOD
 
 **Goal:** Implement and understand one simple, clearly limited propagation equation.
 
-- [ ] Select one educational model and document it using the RF model documentation rules.
-- [ ] Implement the model without grid or UI dependencies.
-- [ ] Add independently calculated reference cases.
-- [ ] Test valid-range boundaries and singularity handling.
-- [ ] State clearly that results are not professional-grade RF predictions.
+- [x] Select one educational model and document it using the RF model documentation rules.
+- [x] Implement the model without grid or UI dependencies.
+- [x] Add independently calculated reference cases.
+- [x] Test valid-range boundaries and singularity handling.
+- [x] State clearly that results are not professional-grade RF predictions.
 
 **Not yet:** Grid sampling, multiple models, obstacles, or terrain.
 
