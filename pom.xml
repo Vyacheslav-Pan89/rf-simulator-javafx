@@ -16,6 +16,7 @@
         <module>rf-desktop</module>
         <module>rf-domain</module>
         <module>rf-scene</module>
+        <module>rf-simulation</module>
     </modules>
 
     <properties>
@@ -43,6 +44,12 @@
             <dependency>
                 <groupId>com.rfsimulator</groupId>
                 <artifactId>rf-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.rfsimulator</groupId>
+                <artifactId>rf-scene</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
